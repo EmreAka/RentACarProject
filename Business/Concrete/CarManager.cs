@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
+using Business.ValidationRules.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +25,15 @@ namespace Business.Concrete
 
         public IResult Add(Car car)
         {
-            if (car.DailyPrice <= 0)
+            var context = new ValidationContext<Car>(car);
+            CarValidator carValidator = new CarValidator();
+            var result = carValidator.Validate(context);
+
+            if (!result.IsValid)
             {
-                new ErrorResult("Daily price must be higher than 0");
+                throw new ValidationException(result.Errors);
             }
+
             _carDal.Add(car);
             return new SuccessResult("Car added");
         }
