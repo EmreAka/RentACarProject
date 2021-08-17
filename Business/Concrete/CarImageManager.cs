@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Business.Concrete
 {
@@ -22,15 +23,24 @@ namespace Business.Concrete
             _carImageDal = carImageDal;
         }
 
-        public IResult Add(CarImage carImage, string filePath)
+        public IResult Add(int carId, IFormFile file)
         {
-            Account account = new Account("emreaka", "769444195137547", "MPxAWUZVilEwk7oSqDifnzQaawc");
+            string picture;
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                picture = Convert.ToBase64String(fileBytes);
+            }
+            Account account = new Account("username", "api key", "api secret key");
             Cloudinary cloudinary = new Cloudinary(account);
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription($@"{filePath}")
+                File = new FileDescription($@"data:image/png;base64,{picture}")
             };
             var result = cloudinary.Upload(uploadParams);
+            CarImage carImage = new CarImage();
+            carImage.CarId = carId;
             carImage.Date = DateTime.Now;
             carImage.ImageUrl = result.Url.ToString();
             _carImageDal.Add(carImage);
