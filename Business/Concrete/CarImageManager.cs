@@ -12,6 +12,7 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Core.Utilities.CloudinaryAdapter;
+using Core.Utilities.Business;
 
 namespace Business.Concrete
 {
@@ -27,9 +28,14 @@ namespace Business.Concrete
 
         public IResult Add(CarImage carImage, IFormFile file)
         {
-            var result = CloudinaryAdapter.UploadPhoto(file);
+            var result = BusinessRules.Run(CheckIfImageLimitExceded());
+            if (result != null)
+            {
+                return result;
+            }
+            var respond = CloudinaryAdapter.UploadPhoto(file);
             carImage.Date = DateTime.Now;
-            carImage.ImageUrl = result;
+            carImage.ImageUrl = respond;
             _carImageDal.Add(carImage);
             return new SuccessResult();
         }
@@ -47,6 +53,13 @@ namespace Business.Concrete
 
         public IDataResult<List<CarImage>> GetAllByCarId(int carId)
         {
+            var result = BusinessRules.Run(CheckIfCarHasAnyImage(carId));
+            if (result != null)
+            {
+                return new ErrorDataResult<List<CarImage>>(new List<CarImage>() { new CarImage() {
+                CarId = carId, ImageUrl = "https://res.cloudinary.com/emreaka/image/upload/v1624304366/job_o67inx.jpg"} },
+                "This car has no image");
+            }
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(i => i.CarId == carId));
         }
 
@@ -57,7 +70,32 @@ namespace Business.Concrete
 
         public IResult Update(CarImage carImage)
         {
+            var result = BusinessRules.Run(CheckIfImageLimitExceded());
+            if (result != null)
+            {
+                return result;
+            }
             _carImageDal.Update(carImage);
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfImageLimitExceded()
+        {
+            var result = _carImageDal.GetAll().Count;
+            if (result > 5)
+            {
+                return new ErrorResult("You can upload max 5 image.");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfCarHasAnyImage(int carId)
+        {
+            var result = _carImageDal.GetAll(c => c.CarId == carId).Any();
+            if (!result)
+            {
+                return new ErrorResult();
+            }
             return new SuccessResult();
         }
     }

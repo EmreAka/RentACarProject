@@ -21,7 +21,7 @@ namespace Core.Utilities.CloudinaryAdapter
                 var fileBytes = ms.ToArray();
                 picture = Convert.ToBase64String(fileBytes);
             }
-            Account account = new Account("emreaka", "apikey", "apisecretkey");
+            Account account = new Account("emreaka", "769444195137547", "MPxAWUZVilEwk7oSqDifnzQaawc");
             Cloudinary cloudinary = new Cloudinary(account);
             var uploadParams = new ImageUploadParams()
             {
