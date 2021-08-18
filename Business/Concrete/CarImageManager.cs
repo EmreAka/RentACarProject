@@ -23,7 +23,7 @@ namespace Business.Concrete
             _carImageDal = carImageDal;
         }
 
-        public IResult Add(int carId, IFormFile file)
+        public IResult Add(CarImage carImage, IFormFile file)
         {
             string picture;
             using (var ms = new MemoryStream())
@@ -32,15 +32,13 @@ namespace Business.Concrete
                 var fileBytes = ms.ToArray();
                 picture = Convert.ToBase64String(fileBytes);
             }
-            Account account = new Account("username", "api key", "api secret key");
+            Account account = new Account("emreaka", "secret", "secret");
             Cloudinary cloudinary = new Cloudinary(account);
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription($@"data:image/png;base64,{picture}")
             };
             var result = cloudinary.Upload(uploadParams);
-            CarImage carImage = new CarImage();
-            carImage.CarId = carId;
             carImage.Date = DateTime.Now;
             carImage.ImageUrl = result.Url.ToString();
             _carImageDal.Add(carImage);

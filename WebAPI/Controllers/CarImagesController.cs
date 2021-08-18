@@ -20,9 +20,9 @@ namespace WebAPI.Controllers
             _carImageService = carImageService;
         }
         [HttpPost("Add")]
-        public IActionResult Add(int carId, IFormFile file)
+        public IActionResult Add([FromForm]CarImage carImage, IFormFile file)
         {
-            return Ok(_carImageService.Add(carId, file));
+            return Ok(_carImageService.Add(carImage, file));
         }
     }
 }
