@@ -11,12 +11,14 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Core.Utilities.CloudinaryAdapter;
 
 namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
+
 
         public CarImageManager(ICarImageDal carImageDal)
         {
@@ -25,22 +27,9 @@ namespace Business.Concrete
 
         public IResult Add(CarImage carImage, IFormFile file)
         {
-            string picture;
-            using (var ms = new MemoryStream())
-            {
-                file.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-                picture = Convert.ToBase64String(fileBytes);
-            }
-            Account account = new Account("emreaka", "secret", "secret");
-            Cloudinary cloudinary = new Cloudinary(account);
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription($@"data:image/png;base64,{picture}")
-            };
-            var result = cloudinary.Upload(uploadParams);
+            var result = CloudinaryAdapter.UploadPhoto(file);
             carImage.Date = DateTime.Now;
-            carImage.ImageUrl = result.Url.ToString();
+            carImage.ImageUrl = result;
             _carImageDal.Add(carImage);
             return new SuccessResult();
         }
