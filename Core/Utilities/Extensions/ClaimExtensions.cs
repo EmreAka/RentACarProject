@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Extensions
+namespace Core.Utilities.Extensions
 {
     public static class ClaimExtensions
     {
