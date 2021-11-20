@@ -3,6 +3,7 @@ using Business.Abstract;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using Entity.DTOs;
 
 namespace Business.Concrete
 {
@@ -46,6 +47,11 @@ namespace Business.Concrete
         {
             _rentalDal.Delete(rental);
             return new SuccessResult("Rental updated");
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
         }
     }
 }
