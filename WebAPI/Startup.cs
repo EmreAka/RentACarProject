@@ -37,7 +37,7 @@ namespace WebAPI
             services.AddControllers();
             services.AddCors(options => 
             {
-                options.AddPolicy("AllowOrigin", builder => builder.WithOrigins("https://localhost:44384"));
+                options.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://localhost:4200"));
             });
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
