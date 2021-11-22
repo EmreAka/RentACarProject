@@ -69,7 +69,7 @@ namespace DataAccess.Concrete.EntityFramework
                              on c.BrandId equals b.Id
                              join co in context.Colours
                              on c.ColourId equals co.Id
-                             where c.BrandId == colourId
+                             where c.ColourId == colourId
                              select new CarDetailDto
                              {
                                  Id = c.Id,
