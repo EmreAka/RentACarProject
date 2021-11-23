@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Entity.DTOs
         public int ModelYear { get; set; }
         public decimal DailyPrice { get; set; }
         public string Description { get; set; }
+        public List<string> Images { get; set; }
     }
 }

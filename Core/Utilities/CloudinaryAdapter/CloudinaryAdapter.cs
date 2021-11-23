@@ -25,7 +25,8 @@ namespace Core.Utilities.CloudinaryAdapter
             Cloudinary cloudinary = new Cloudinary(account);
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription($@"data:image/png;base64,{picture}")
+                File = new FileDescription($@"data:image/png;base64,{picture}"),
+                Transformation = new Transformation().Width(1280).Height(720).Crop("fill")
             };
             var result = cloudinary.Upload(uploadParams);
             return result.Url.ToString();

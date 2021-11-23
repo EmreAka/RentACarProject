@@ -15,6 +15,30 @@ namespace DataAccess.Concrete.EntityFramework
     public class EfCarDal :
         EfEntityRepositoryBase<Car, ReCapProjectContext>, ICarDal
     {
+        public List<CarDetailDto> GetCarDetailByCarId(int carId)
+        {
+            using (ReCapProjectContext context = new ReCapProjectContext())
+            {
+                var result = from c in context.Cars
+                             join b in context.Brands
+                             on c.BrandId equals b.Id
+                             join co in context.Colours
+                             on c.ColourId equals co.Id
+                             where c.Id == carId
+                             select new CarDetailDto
+                             {
+                                 Id = c.Id,
+                                 BrandName = b.Name,
+                                 ColourName = co.Name,
+                                 DailyPrice = c.DailyPrice,
+                                 Description = c.Description,
+                                 ModelYear = c.ModelYear,
+                                 Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
+                             };
+                return result.ToList();
+            }
+        }
+
         public List<CarDetailDto> GetCarDetails()
         {
             using (ReCapProjectContext context = new ReCapProjectContext())
@@ -31,7 +55,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  ColourName = co.Name,
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
-                                 ModelYear = c.ModelYear
+                                 ModelYear = c.ModelYear,
+                                 Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
                              };
                 return result.ToList();
             }
@@ -54,7 +79,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  ColourName = co.Name,
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
-                                 ModelYear = c.ModelYear
+                                 ModelYear = c.ModelYear,
+                                 Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
                              };
                 return result.ToList();
             }
@@ -77,7 +103,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  ColourName = co.Name,
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
-                                 ModelYear = c.ModelYear
+                                 ModelYear = c.ModelYear,
+                                 Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
                              };
                 return result.ToList();
             }
