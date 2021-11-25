@@ -5,12 +5,8 @@ using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
-using System.IO;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.CloudinaryAdapter;
 using Core.Utilities.Business;
 
@@ -25,10 +21,12 @@ namespace Business.Concrete
         {
             _carImageDal = carImageDal;
         }
-
+        
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(CarImage carImage, IFormFile file)
         {
-            var result = BusinessRules.Run(CheckIfImageLimitExceded());
+            var result = BusinessRules.Run(CheckIfImageLimitExceded(carImage.CarId));
             if (result != null)
             {
                 return result;
@@ -40,17 +38,21 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(CarImage carImage)
         {
             _carImageDal.Delete(carImage);
             return new SuccessResult();
         }
 
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
-
+        
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAllByCarId(int carId)
         {
             var result = BusinessRules.Run(CheckIfCarHasAnyImage(carId));
@@ -62,15 +64,18 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(i => i.CarId == carId));
         }
-
+        
+        [CacheAspect]
         public IDataResult<CarImage> GetById(int id)
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(i => i.Id == id));
         }
-
+        
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(CarImage carImage)
         {
-            var result = BusinessRules.Run(CheckIfImageLimitExceded());
+            var result = BusinessRules.Run(CheckIfImageLimitExceded(carImage.CarId));
             if (result != null)
             {
                 return result;
@@ -79,9 +84,9 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfImageLimitExceded()
+        private IResult CheckIfImageLimitExceded(int carId)
         {
-            var result = _carImageDal.GetAll().Count;
+            var result = _carImageDal.GetAll(c => c.CarId == carId).Count;
             if (result > 5)
             {
                 return new ErrorResult("You can upload max 5 image.");
