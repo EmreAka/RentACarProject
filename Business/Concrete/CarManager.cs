@@ -1,20 +1,13 @@
 ﻿using Business.Abstract;
-using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
-using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
-using FluentValidation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -74,7 +67,8 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByBrandId(brandId));
         }
-
+        
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarDetailsByColourId(int colourId)
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByColourId(colourId));
