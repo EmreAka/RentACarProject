@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Business.Abstract;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
@@ -53,6 +54,17 @@ namespace Business.Concrete
         public IDataResult<List<RentalDetailDto>> GetDetailByCarId(int carId)
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
+        }
+
+        public IResult CheckIfCarIsAvailable(int carId, DateTime rentDate, DateTime returnDate)
+        {
+            var result = _rentalDal.Get(r => r.CarId == carId && r.ReturnDate >= rentDate);
+            if (result != null)
+            {
+                return new ErrorResult("This car is not available. It is going to be available in: " + result.ReturnDate.Value.ToString("yyyy-MM-dd"));
+            }
+
+            return new SuccessResult("This car is available.");
         }
 
         [CacheAspect]
