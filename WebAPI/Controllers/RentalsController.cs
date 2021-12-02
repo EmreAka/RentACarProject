@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Entity.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +51,18 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getdetailbycarid")]
+        public IActionResult GetDetailByCarId(int carId)
+        {
+            var result = _rentalService.GetDetailByCarId(carId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
         [HttpPost("add")]
         public IActionResult Add(Rental rental)
         {
@@ -62,6 +75,13 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("checkifcarisavailable")]
+        public IActionResult CheckIfCarIsAvailable(int carId, DateTime rentDate, DateTime returnDate)
+        {
+            var result = _rentalService.CheckIfCarIsAvailable(carId, rentDate, returnDate);
+            return Ok(result);
+        }
+        
         [HttpPost("delete")]
         public IActionResult Delete(Rental rental)
         {

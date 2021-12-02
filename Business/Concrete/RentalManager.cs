@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Business.Abstract;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
@@ -32,11 +33,6 @@ namespace Business.Concrete
         [CacheRemoveAspect("IRentalService.Get")]
         public IResult Add(Rental rental)
         {
-            Rental result =  _rentalDal.Get(r => r.CarId == rental.CarId && r.ReturnDate == null);
-            if (result != null)
-            {
-                return new ErrorResult("This car is not available");
-            }
             _rentalDal.Add(rental);
             return new SuccessResult("Rental added");
         }
@@ -53,6 +49,22 @@ namespace Business.Concrete
         {
             _rentalDal.Delete(rental);
             return new SuccessResult("Rental updated");
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetDetailByCarId(int carId)
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
+        }
+
+        public IResult CheckIfCarIsAvailable(int carId, DateTime rentDate, DateTime returnDate)
+        {
+            var result = _rentalDal.Get(r => r.CarId == carId && r.ReturnDate >= rentDate);
+            if (result != null)
+            {
+                return new ErrorResult("This car is not available. It is going to be available in: " + result.ReturnDate.Value.ToString("yyyy-MM-dd"));
+            }
+
+            return new SuccessResult("This car is available.");
         }
 
         [CacheAspect]
