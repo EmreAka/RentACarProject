@@ -32,11 +32,6 @@ namespace Business.Concrete
         [CacheRemoveAspect("IRentalService.Get")]
         public IResult Add(Rental rental)
         {
-            Rental result =  _rentalDal.Get(r => r.CarId == rental.CarId && r.ReturnDate == null);
-            if (result != null)
-            {
-                return new ErrorResult("This car is not available");
-            }
             _rentalDal.Add(rental);
             return new SuccessResult("Rental added");
         }
@@ -53,6 +48,11 @@ namespace Business.Concrete
         {
             _rentalDal.Delete(rental);
             return new SuccessResult("Rental updated");
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetDetailByCarId(int carId)
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
         }
 
         [CacheAspect]

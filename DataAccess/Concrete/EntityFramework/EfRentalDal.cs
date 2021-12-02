@@ -37,5 +37,30 @@ namespace DataAccess.Concrete.EntityFramework
                 return result.ToList();
             }
         }
+
+        public List<RentalDetailDto> GetDetailByCarId(int carId)
+        {
+            using (ReCapProjectContext context = new ReCapProjectContext())
+            {
+                var result = from rental in context.Rentals
+                    join customer in context.Customers
+                        on rental.CustomerId equals customer.Id
+                    join car in context.Cars
+                        on rental.CarId equals car.Id
+                    join brand in context.Brands
+                        on car.BrandId equals brand.Id
+                    where rental.CarId == carId
+                    select new RentalDetailDto
+                    {
+                        Id = rental.Id,
+                        BrandName = brand.Name,
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        RentDate = rental.RentDate,
+                        ReturnDate = rental.ReturnDate
+                    };
+                return result.ToList();
+            }
+        }
     }
 }
