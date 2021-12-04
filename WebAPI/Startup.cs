@@ -61,6 +61,8 @@ namespace WebAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                //To be able to use two classes with the same name.
+                c.CustomSchemaIds(i => i.FullName);
             });
         }
 
