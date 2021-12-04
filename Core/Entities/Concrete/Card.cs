@@ -7,6 +7,7 @@ namespace Core.Entities.Concrete
         public string NameOnCard { get; set; }
         public string CardNumber { get; set; }
         public string Cvv { get; set; }
-        public DateTime Expiration { get; set; }
+        public string ExpirationMonth { get; set; }
+        public string ExpirationYear { get; set; }
     }
 }
