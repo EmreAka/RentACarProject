@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Business.Abstract;
+using Castle.Core.Internal;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -58,10 +59,10 @@ namespace Business.Concrete
 
         public IResult CheckIfCarIsAvailable(int carId, DateTime rentDate, DateTime returnDate)
         {
-            var result = _rentalDal.Get(r => r.CarId == carId && r.ReturnDate >= rentDate);
-            if (result != null)
+            var result = _rentalDal.GetAll(r => r.CarId == carId && r.ReturnDate >= rentDate);
+            if (result.IsNullOrEmpty() == false)
             {
-                return new ErrorResult("This car is not available. It is going to be available in: " + result.ReturnDate.Value.ToString("yyyy-MM-dd"));
+                return new ErrorResult("This car is not available. It is going to be available in: " + result[result.Count - 1].ReturnDate.Value.ToString("yyyy-MM-dd"));
             }
 
             return new SuccessResult("This car is available.");
