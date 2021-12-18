@@ -8,6 +8,7 @@ using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
 using System.Collections.Generic;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -23,6 +24,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
+        [SecuredOperation("admin")]
         public IResult Add(Car car)
         {
             _carDal.Add(car);
@@ -36,7 +38,6 @@ namespace Business.Concrete
             return new SuccessResult("Car deleted");
         }
 
-        //[SecuredOperation("car.getall")]
         [CacheAspect]
         public IDataResult<List<Car>> GetAll()
         {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Business.Abstract;
 using Castle.Core.Internal;
 using Core.Aspects.Autofac.Caching;
+using Core.Utilities.Business;
+using Core.Utilities.FindeksAdapter;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
@@ -13,10 +15,12 @@ namespace Business.Concrete
     public class RentalManager: IRentalService
     {
         private IRentalDal _rentalDal;
+        private ICarService _carService;
 
-        public RentalManager(IRentalDal rentalDal)
+        public RentalManager(IRentalDal rentalDal, ICarService carService)
         {
             _rentalDal = rentalDal;
+            _carService = carService;
         }
 
         [CacheAspect]
@@ -34,6 +38,13 @@ namespace Business.Concrete
         [CacheRemoveAspect("IRentalService.Get")]
         public IResult Add(Rental rental)
         {
+            var requiredFindeksScore = _carService.GetById(rental.CarId).Data.RequiredFindeksScore;
+            var findeksScoreOfUser = FindexAdapter.CalculateFindeksScore();
+            IResult result = BusinessRules.Run(CheckIfUserHasEnoughFindeksScore(requiredFindeksScore, findeksScoreOfUser));
+            if (result != null)
+            {
+                return result;
+            }
             _rentalDal.Add(rental);
             return new SuccessResult("Rental added");
         }
@@ -56,6 +67,12 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
         }
+        
+        [CacheAspect]
+        public IDataResult<List<RentalDetailDto>> GetDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
+        }
 
         public IResult CheckIfCarIsAvailable(int carId, DateTime rentDate, DateTime returnDate)
         {
@@ -68,10 +85,15 @@ namespace Business.Concrete
             return new SuccessResult("This car is available.");
         }
 
-        [CacheAspect]
-        public IDataResult<List<RentalDetailDto>> GetDetails()
+        public IResult CheckIfUserHasEnoughFindeksScore(int requiredFindeksScore, int findeksScoreOfCustomer)
         {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
+            if (findeksScoreOfCustomer < requiredFindeksScore)
+            {
+                return new ErrorResult("Findeks score is too low.");
+            } else
+            {
+                return new SuccessResult("Findeks score is higher than required.");
+            }
         }
     }
 }
