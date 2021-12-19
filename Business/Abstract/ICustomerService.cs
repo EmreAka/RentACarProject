@@ -13,5 +13,6 @@ namespace Business.Abstract
         IResult Add(Customer customer);
         IResult Delete(Customer customer);
         IResult Update(Customer customer);
+        IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail(string email);
     }
 }

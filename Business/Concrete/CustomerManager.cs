@@ -55,5 +55,10 @@ namespace Business.Concrete
             _customerDal.Update(customer);
             return new SuccessResult("Customer updated");
         }
+
+        public IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail(string email)
+        {
+            return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetailByEmail(email));
+        }
     }
 }
