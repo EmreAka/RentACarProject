@@ -26,5 +26,20 @@ namespace DataAccess.Concrete.EntityFramework
                 return result.ToList();
             } 
         }
+
+        public List<CustomerDetailDto> GetCustomerDetailByEmail(string email)
+        {
+            using (ReCapProjectContext context = new ReCapProjectContext())
+            {
+                var result = from c in context.Customers
+                    join u in context.Users
+                        on c.Id equals u.Id
+                    where u.Email == email
+                    select new CustomerDetailDto
+                    { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, 
+                        CompanyName = c.CompanyName, Status = c.Status};
+                return result.ToList();
+            } 
+        }
     }
 }
