@@ -38,13 +38,6 @@ namespace Business.Concrete
         [CacheRemoveAspect("IRentalService.Get")]
         public IResult Add(Rental rental)
         {
-            var requiredFindeksScore = _carService.GetById(rental.CarId).Data.RequiredFindeksScore;
-            var findeksScoreOfUser = FindexAdapter.CalculateFindeksScore();
-            IResult result = BusinessRules.Run(CheckIfUserHasEnoughFindeksScore(requiredFindeksScore, findeksScoreOfUser));
-            if (result != null)
-            {
-                return result;
-            }
             _rentalDal.Add(rental);
             return new SuccessResult("Rental added");
         }
@@ -84,16 +77,6 @@ namespace Business.Concrete
 
             return new SuccessResult("This car is available.");
         }
-
-        public IResult CheckIfUserHasEnoughFindeksScore(int requiredFindeksScore, int findeksScoreOfCustomer)
-        {
-            if (findeksScoreOfCustomer < requiredFindeksScore)
-            {
-                return new ErrorResult("Findeks score is too low.");
-            } else
-            {
-                return new SuccessResult("Findeks score is higher than required.");
-            }
-        }
+        
     }
 }

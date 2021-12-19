@@ -16,9 +16,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("pay")]
-        public IActionResult Pay(Card card)
+        public IActionResult Pay(Card card, int carId)
         {
-            var result = _paymentService.Pay(card);
+            var result = _paymentService.Pay(card, carId);
             if (result.Success)
             {
                 return Ok(result);
