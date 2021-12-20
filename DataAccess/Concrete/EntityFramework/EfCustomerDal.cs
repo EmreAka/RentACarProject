@@ -21,7 +21,7 @@ namespace DataAccess.Concrete.EntityFramework
                              join u in context.Users
                              on c.Id equals u.Id
                              select new CustomerDetailDto
-                             { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, 
+                             { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, Email = c.Email,
                              CompanyName = c.CompanyName, Status = c.Status};
                 return result.ToList();
             } 
@@ -36,7 +36,7 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.Id equals u.Id
                     where u.Email == email
                     select new CustomerDetailDto
-                    { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, 
+                    { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, Email = c.Email,
                         CompanyName = c.CompanyName, Status = c.Status};
                 return result.ToList();
             } 
