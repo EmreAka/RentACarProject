@@ -60,5 +60,16 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetailByEmail(email));
         }
+        [CacheRemoveAspect("ICustomerService.Get")]
+        public IResult UpdateDetails(CustomerDetailDto customerDetailDto)
+        {
+            var customerToUpdate = _customerDal.Get(c => c.Email == customerDetailDto.Email);
+            customerToUpdate.FirstName = customerDetailDto.FirstName;
+            customerToUpdate.LastName = customerDetailDto.LastName;
+            customerToUpdate.Email = customerDetailDto.Email;
+            customerToUpdate.CompanyName = customerDetailDto.CompanyName;
+            _customerDal.Update(customerToUpdate);
+            return new SuccessResult("Customer details updated");
+        }
     }
 }

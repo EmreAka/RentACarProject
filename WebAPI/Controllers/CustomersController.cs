@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
+using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -88,6 +89,16 @@ namespace WebAPI.Controllers
                 return Ok(result);
             }
 
+            return BadRequest(result);
+        }
+        [HttpPost("updatedetails")]
+        public IActionResult UpdateDetails(CustomerDetailDto customerDetailDto)
+        {
+            var result = _customerService.UpdateDetails(customerDetailDto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
             return BadRequest(result);
         }
     }
