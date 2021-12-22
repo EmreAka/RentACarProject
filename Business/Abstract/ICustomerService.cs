@@ -14,5 +14,6 @@ namespace Business.Abstract
         IResult Delete(Customer customer);
         IResult Update(Customer customer);
         IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail(string email);
+        IResult UpdateDetails(CustomerDetailDto customerDetailDto);
     }
 }
