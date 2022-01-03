@@ -54,6 +54,18 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpDelete("deletebyid")]
+        public IActionResult DeleteById(int id)
+        {
+            var result = _carImageService.DeleteById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
         [HttpGet("getall")]
         //[Authorize()]
         public IActionResult GetAll()

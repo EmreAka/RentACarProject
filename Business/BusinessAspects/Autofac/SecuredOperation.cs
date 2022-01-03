@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
+using Core.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Core.Utilities.Extensions;
 
@@ -34,7 +35,8 @@ namespace Business.BusinessAspects.Autofac
                     return;
                 }
             }
-            throw new Exception("Authorization Denied");
+            //throw new Exception("Authorization Denied");
+            throw new AuthorizationDeniedException("Authorization Denied");
         }
     }
 }

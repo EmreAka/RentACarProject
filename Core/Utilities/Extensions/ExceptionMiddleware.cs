@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Core.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,18 @@ namespace Core.Utilities.Extensions
                     Message = message,
                     Errors = errors
                 }.ToString()); ;
+            }
+
+            if (e.GetType() == typeof(AuthorizationDeniedException))
+            {
+                message = e.Message;
+                httpContext.Response.StatusCode = 400;
+
+                return httpContext.Response.WriteAsync(new ErrorDetails
+                {
+                    StatusCode = httpContext.Response.StatusCode,
+                    Message = message
+                }.ToString());
             }
 
             return httpContext.Response.WriteAsync(new ErrorDetails

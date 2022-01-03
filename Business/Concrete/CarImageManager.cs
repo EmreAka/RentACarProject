@@ -83,6 +83,19 @@ namespace Business.Concrete
             _carImageDal.Update(carImage);
             return new SuccessResult();
         }
+        
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
+        public IResult DeleteById(int id)
+        {
+            var result = _carImageDal.Get(i => i.Id == id);
+            if (result == null)
+            {
+                return new ErrorResult("There is no Image with this id.");
+            }
+            _carImageDal.Delete(result);
+            return new SuccessResult("Car Image deleted successfully");
+        }
 
         private IResult CheckIfImageLimitExceded(int carId)
         {
