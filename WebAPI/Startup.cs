@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAPI
 {
@@ -55,8 +56,25 @@ namespace WebAPI
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
                     ClockSkew = TimeSpan.Zero
-                };  
+                };
+                options.SaveToken = true;
+                options.Events = new JwtBearerEvents();
+                options.Events.OnMessageReceived = context =>
+                {
+                    if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                    {
+                        context.Token = context.Request.Cookies["X-Access-Token"];
+                    }
+
+                    return Task.CompletedTask;
+                };
+            }).AddCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.IsEssential = true;
             });
+            
             services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()
             });
