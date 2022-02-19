@@ -38,8 +38,10 @@ namespace WebAPI
             services.AddControllers();
             services.AddCors(options => 
             {
-                options.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://localhost:4200")
-                    .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                options.AddPolicy("AllowOrigin", builder =>
+                {
+                    builder.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                });
             });
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
@@ -70,7 +72,7 @@ namespace WebAPI
                 };
             }).AddCookie(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SameSite = SameSiteMode.Strict;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.IsEssential = true;
             });

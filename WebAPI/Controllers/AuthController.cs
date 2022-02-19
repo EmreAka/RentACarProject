@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             if (result.Success)
             {
                 Response.Cookies.Append("X-Access-Token", result.Data.Token, new CookieOptions() 
-                    { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
+                    { HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true});
                 return Ok(result);
             }
             return BadRequest(result);
