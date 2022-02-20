@@ -46,7 +46,7 @@ namespace WebAPI
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -59,23 +59,25 @@ namespace WebAPI
                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
                     ClockSkew = TimeSpan.Zero
                 };
-                options.SaveToken = true;
-                options.Events = new JwtBearerEvents();
-                options.Events.OnMessageReceived = context =>
-                {
-                    if (context.Request.Cookies.ContainsKey("X-Access-Token"))
-                    {
-                        context.Token = context.Request.Cookies["X-Access-Token"];
-                    }
-
-                    return Task.CompletedTask;
-                };
-            }).AddCookie(options =>
-            {
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.IsEssential = true;
+                //-----I'm not going to use HttpOnly cookies for now.-----
+                // options.SaveToken = true;
+                // options.Events = new JwtBearerEvents();
+                // options.Events.OnMessageReceived = context =>
+                // {
+                //     if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                //     {
+                //         context.Token = context.Request.Cookies["X-Access-Token"];
+                //     }
+                //
+                //     return Task.CompletedTask;
+                // };
             });
+            //     .AddCookie(options =>
+            // {
+            //     options.Cookie.SameSite = SameSiteMode.Strict;
+            //     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //     options.Cookie.IsEssential = true;
+            // });
             
             services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()
