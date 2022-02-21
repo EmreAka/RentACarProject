@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entity.Concrete;
 
 namespace Business.Concrete
 {
@@ -16,11 +17,13 @@ namespace Business.Concrete
     {
         IUserService _userService;
         ITokenHelper _tokenHelper;
+        private ICustomerService _customerService;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICustomerService customerService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _customerService = customerService;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -45,21 +48,39 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(userToCheck, "Successfully Logged In.");
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        // public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        // {
+        //     byte[] passwordHash, passwordSalt;
+        //     HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //     var user = new User()
+        //     {
+        //         Email = userForRegisterDto.Email,
+        //         FirstName = userForRegisterDto.FirstName,
+        //         LastName = userForRegisterDto.LastName,
+        //         PasswordSalt = passwordSalt,
+        //         PasswordHash = passwordHash,
+        //         Status = true
+        //     };
+        //     _userService.Add(user);
+        //     return new SuccessDataResult<User>(user, "Successfully Registered.");
+        //}
+        
+        public IDataResult<User> Register(CustomerForRegisterDto customerForRegisterDto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-            var user = new User()
+            var customer = new Customer()
             {
-                Email = userForRegisterDto.Email,
-                FirstName = userForRegisterDto.FirstName,
-                LastName = userForRegisterDto.LastName,
+                Email = customerForRegisterDto.Email,
+                FirstName = customerForRegisterDto.FirstName,
+                LastName = customerForRegisterDto.LastName,
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash,
-                Status = true
+                Status = true,
+                CompanyName = customerForRegisterDto.CompanyName
             };
-            _userService.Add(user);
-            return new SuccessDataResult<User>(user, "Successfully Registered.");
+            _customerService.Add(customer);
+            return new SuccessDataResult<User>(customer, "Successfully Registered.");
         }
 
         public IResult UserExists(string email)
