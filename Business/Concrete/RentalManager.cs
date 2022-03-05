@@ -72,7 +72,23 @@ namespace Business.Concrete
             var result = _rentalDal.GetAll(r => r.CarId == carId && r.ReturnDate >= rentDate);
             if (result.IsNullOrEmpty() == false)
             {
-                return new ErrorResult("This car is not available. It is going to be available in: " + result[result.Count - 1].ReturnDate.Value.ToString("yyyy-MM-dd"));
+                return new ErrorResult("This car is not available. It is going to be available in: " +
+                                       result[result.Count - 1].ReturnDate.Value.ToString("yyyy-MM-dd"));
+            }
+
+            if (rentDate > returnDate)
+            {
+                return new ErrorResult("Beginning day must be before than ending day.");
+            }
+
+            if ((returnDate - rentDate).Days > 365)
+            {
+                return new ErrorResult("Your renting exceeds 1 year.");
+            }
+
+            if (rentDate < DateTime.Now || returnDate < DateTime.Now)
+            {
+                return new ErrorResult("You should rent the car for the future, not for the past...");
             }
 
             return new SuccessResult("This car is available.");
