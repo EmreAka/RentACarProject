@@ -13,7 +13,7 @@ namespace Business.BusinessAspects.Autofac
     public class SecuredUpdateCarOperation : MethodInterception
     {
         private IHttpContextAccessor _httpContextAccessor;
-        
+
         public SecuredUpdateCarOperation()
         {
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
@@ -25,9 +25,12 @@ namespace Business.BusinessAspects.Autofac
             var arguments = invocation.Arguments.Cast<Car>().ToList();
             foreach (var id in claimsIdentities)
             {
-                if (arguments[0].UserId.ToString().Equals(id.Claims.ToList()[0].Value))
+                foreach (var userClaim in id.Claims.ToList())
                 {
-                    return;
+                    if (arguments[0].UserId.ToString().Equals(userClaim.Value))
+                    {
+                        return;
+                    }
                 }
             }
             throw new AuthorizationDeniedException("Authorization Denied");
