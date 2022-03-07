@@ -1,36 +1,35 @@
-﻿using Core.Utilities.Interceptors;
-using Core.Utilities.IoC;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Castle.DynamicProxy;
 using Core.Exceptions;
+using Core.Utilities.Interceptors;
+using Core.Utilities.IoC;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Core.Utilities.Extensions;
+using Entity.Concrete;
 
 namespace Business.BusinessAspects.Autofac
 {
-    public class SecuredOperation : MethodInterception
+    public class SecuredUpdateCarOperation : MethodInterception
     {
-        private string[] _roles;
         private IHttpContextAccessor _httpContextAccessor;
-
-        public SecuredOperation(string roles)
+        
+        public SecuredUpdateCarOperation()
         {
-            _roles = roles.Split(',');
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-
         }
 
         protected override void OnBefore(IInvocation invocation)
         {
-            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
-            foreach (var role in _roles)
+            var claimsIdentities = _httpContextAccessor.HttpContext.User.Identities;
+            var arguments = invocation.Arguments.Cast<Car>().ToList();
+            foreach (var id in claimsIdentities)
             {
-                if (roleClaims.Contains(role))
+                if (arguments[0].UserId.ToString().Equals(id.Claims.ToList()[0].Value))
                 {
                     return;
                 }
             }
-            //throw new Exception("Authorization Denied");
             throw new AuthorizationDeniedException("Authorization Denied");
         }
     }
