@@ -32,6 +32,7 @@ namespace Business.Concrete
 
         [CacheRemoveAspect("ICarImageService.Get")]
         [CacheRemoveAspect("ICarService.Get")]
+        [SecuredAddImageOperation]
         public IResult Add(CarImage carImage, IFormFile file)
         {
             var result = BusinessRules.Run(CheckIfImageLimitExceded(carImage.CarId));
