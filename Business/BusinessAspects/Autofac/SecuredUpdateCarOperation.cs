@@ -23,11 +23,11 @@ namespace Business.BusinessAspects.Autofac
         {
             var claimsIdentities = _httpContextAccessor.HttpContext.User.Identities;
             var arguments = invocation.Arguments.Cast<Car>().ToList();
-            foreach (var id in claimsIdentities)
+            foreach (var claimsIdentity in claimsIdentities)
             {
-                foreach (var userClaim in id.Claims.ToList())
+                foreach (var Claim in claimsIdentity.Claims.ToList())
                 {
-                    if (arguments[0].UserId.ToString().Equals(userClaim.Value))
+                    if (arguments[0].UserId.ToString().Equals(Claim.Value))
                     {
                         return;
                     }
