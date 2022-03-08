@@ -5,6 +5,7 @@ using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Business.BusinessAspects.Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Core.Aspects.Autofac.Caching;
@@ -48,13 +49,14 @@ namespace Business.Concrete
 
         [CacheRemoveAspect("ICarImageService.Get")]
         [CacheRemoveAspect("ICarService.Get")]
+        [SecuredUpdateImageOperation]
         public IResult Delete(CarImage carImage)
         {
-            var result = BusinessRules.Run(CheckIfUserIsAllowedToDeleteThisImage(carImage.CarId));
-            if (result != null)
-            {
-                throw new AuthorizationDeniedException("Authorization Denied");
-            }
+            // var result = BusinessRules.Run(CheckIfUserIsAllowedToDeleteThisImage(carImage.CarId));
+            // if (result != null)
+            // {
+            //     throw new AuthorizationDeniedException("Authorization Denied");
+            // }
 
             _carImageDal.Delete(carImage);
             return new SuccessResult("Car Image deleted successfully");
@@ -94,6 +96,7 @@ namespace Business.Concrete
 
         [CacheRemoveAspect("ICarImageService.Get")]
         [CacheRemoveAspect("ICarService.Get")]
+        [SecuredUpdateImageOperation]
         public IResult Update(CarImage carImage)
         {
             var result = BusinessRules.Run(CheckIfImageLimitExceded(carImage.CarId));
@@ -114,12 +117,6 @@ namespace Business.Concrete
             if (image == null)
             {
                 return new ErrorResult("There is no Image with this id.");
-            }
-
-            var result = BusinessRules.Run(CheckIfUserIsAllowedToDeleteThisImage(image.CarId));
-            if (result != null)
-            {
-                throw new AuthorizationDeniedException("Authorization Denied");
             }
 
             _carImageDal.Delete(image);
@@ -148,7 +145,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfUserIsAllowedToDeleteThisImage(int carId)
+        /*private IResult CheckIfUserIsAllowedToDeleteThisImage(int carId)
         {
             var claimsIdentities = _httpContextAccessor.HttpContext.User.Identities;
             var result = _carService.GetById(carId);
@@ -166,6 +163,6 @@ namespace Business.Concrete
             }
 
             return new ErrorResult();
-        }
+        }*/
     }
 }
