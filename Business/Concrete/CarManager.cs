@@ -68,6 +68,11 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByCustomerId(customerId));
         }
+        
+        public IDataResult<List<CarDetailDto>> GetCarDetailsPaginated(CarDetailFilterAndPaginationDto carDetailFilterAndPaginationDto)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsPaginated(carDetailFilterAndPaginationDto));
+        }
 
         [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarDetails()

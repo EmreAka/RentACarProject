@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Entity.DTOs;
 
 namespace WebAPI.Controllers
 {
@@ -161,6 +162,18 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
+            return BadRequest(result);
+        }
+
+        [HttpPost("getcardetailspaginated")]
+        public IActionResult GetCarDetailsPaginated(CarDetailFilterAndPaginationDto carDetailFilterAndPaginationDto)
+        {
+            var result = _carService.GetCarDetailsPaginated(carDetailFilterAndPaginationDto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
             return BadRequest(result);
         }
     }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -52,7 +53,7 @@ namespace DataAccess.Concrete.EntityFramework
                     join co in context.Colours
                         on c.ColourId equals co.Id
                     join u in context.Customers
-                        on c.UserId equals u.Id    
+                        on c.UserId equals u.Id
                     where c.BrandId == brandId
                     where c.ColourId == colourId
                     select new CarDetailDto
@@ -174,6 +175,64 @@ namespace DataAccess.Concrete.EntityFramework
                         Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
                     };
                 return result.ToList();
+            }
+        }
+
+        public List<CarDetailDto> GetCarDetailsPaginated(
+            CarDetailFilterAndPaginationDto carDetailFilterAndPaginationDto)
+        {
+            using (ReCapProjectContext context = new ReCapProjectContext())
+            {
+                var pageResults = 3f;
+                var result = from c in context.Cars
+                    join b in context.Brands
+                        on c.BrandId equals b.Id
+                    join co in context.Colours
+                        on c.ColourId equals co.Id
+                    join u in context.Customers
+                        on c.UserId equals u.Id
+                    select new CarDetailDto
+                    {
+                        Id = c.Id,
+                        BrandName = b.Name,
+                        ColourName = co.Name,
+                        CompanyName = u.CompanyName,
+                        DailyPrice = c.DailyPrice,
+                        Description = c.Description,
+                        ModelYear = c.ModelYear,
+                        Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
+                    };
+                var pageResult = Math.Ceiling(result.Count() / pageResults);
+
+                if (carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() &&
+                    carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
+                {
+                    return result.Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
+                        .Take((int) pageResult).ToList();
+                }
+
+                if (!carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() && carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
+                {
+                    return result.Where(c => c.BrandName.Contains(carDetailFilterAndPaginationDto.BrandName))
+                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
+                        .Take((int) pageResult).ToList();
+                }
+
+                if (carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() &&
+                    !carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
+                {
+                    return result.Where(c => c.ColourName.Contains(carDetailFilterAndPaginationDto.ColourName))
+                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
+                        .Take((int) pageResult).ToList();
+                }
+
+                else
+                {
+                    return result.Where(c => c.ColourName.Contains(carDetailFilterAndPaginationDto.ColourName)
+                                             && c.BrandName.Contains(carDetailFilterAndPaginationDto.BrandName))
+                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
+                        .Take((int) pageResult).ToList();
+                }
             }
         }
     }
