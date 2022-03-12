@@ -17,6 +17,5 @@ namespace DataAccess.Abstract
         List<CarDetailDto> GetCarDetailByCarId(int carId);
         List<CarDetailDto> GetCarDetailsByBrandIdAndColourId(int brandId, int colourId);
         List<CarDetailDto> GetCarDetailsByCustomerId(int customerId);
-        List<CarDetailDto> GetCarDetailsPaginated(int page, string brandName, string colourName);
     }
 }

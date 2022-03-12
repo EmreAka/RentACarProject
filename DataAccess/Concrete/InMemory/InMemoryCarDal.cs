@@ -75,11 +75,6 @@ namespace DataAccess.Concrete.InMemory
             throw new NotImplementedException();
         }
 
-        public List<CarDetailDto> GetCarDetailsPaginated(int page, string brandName, string colourName)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<CarDetailDto> GetCarDetailsPaginated(int page)
         {
             throw new NotImplementedException();

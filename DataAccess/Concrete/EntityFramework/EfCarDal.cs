@@ -177,39 +177,5 @@ namespace DataAccess.Concrete.EntityFramework
                 return result.ToList();
             }
         }
-
-        public List<CarDetailDto> GetCarDetailsPaginated(int page, string brandName, string colourName)
-        {
-            using (ReCapProjectContext context = new ReCapProjectContext())
-            {
-                var result = from c in context.Cars
-                    join b in context.Brands
-                        on c.BrandId equals b.Id
-                    join co in context.Colours
-                        on c.ColourId equals co.Id
-                    join u in context.Customers
-                        on c.UserId equals u.Id
-                        where b.Name.Contains(brandName) 
-                              != brandName.IsNullOrEmpty() 
-                              && co.Name.Contains(colourName) 
-                              != colourName.IsNullOrEmpty()
-                    select new CarDetailDto
-                    {
-                        Id = c.Id,
-                        BrandName = b.Name,
-                        ColourName = co.Name,
-                        CompanyName = u.CompanyName,
-                        DailyPrice = c.DailyPrice,
-                        Description = c.Description,
-                        ModelYear = c.ModelYear,
-                        Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
-                    };
-                var dataCount = result.Count();
-                var pageResults = 4;
-                
-                return result.Skip((page - 1) * pageResults).Take(pageResults)
-                    .ToList();
-            }
-        }
     }
 }
