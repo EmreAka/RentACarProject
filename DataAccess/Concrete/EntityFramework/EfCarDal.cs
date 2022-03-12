@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -52,7 +53,7 @@ namespace DataAccess.Concrete.EntityFramework
                     join co in context.Colours
                         on c.ColourId equals co.Id
                     join u in context.Customers
-                        on c.UserId equals u.Id    
+                        on c.UserId equals u.Id
                     where c.BrandId == brandId
                     where c.ColourId == colourId
                     select new CarDetailDto
