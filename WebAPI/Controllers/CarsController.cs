@@ -165,10 +165,10 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("getcardetailspaginated")]
-        public IActionResult GetCarDetailsPaginated(CarDetailFilterAndPaginationDto carDetailFilterAndPaginationDto)
+        [HttpGet("getcardetailspaginated")]
+        public IActionResult GetCarDetailsPaginated(int page, string brandName, string colourName)
         {
-            var result = _carService.GetCarDetailsPaginated(carDetailFilterAndPaginationDto);
+            var result = _carService.GetCarDetailsPaginated(page, brandName, colourName);
             if (result.Success)
             {
                 return Ok(result);

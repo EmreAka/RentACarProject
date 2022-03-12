@@ -178,12 +178,10 @@ namespace DataAccess.Concrete.EntityFramework
             }
         }
 
-        public List<CarDetailDto> GetCarDetailsPaginated(
-            CarDetailFilterAndPaginationDto carDetailFilterAndPaginationDto)
+        public List<CarDetailDto> GetCarDetailsPaginated(int page, string brandName, string colourName)
         {
             using (ReCapProjectContext context = new ReCapProjectContext())
             {
-                var pageResults = 3f;
                 var result = from c in context.Cars
                     join b in context.Brands
                         on c.BrandId equals b.Id
@@ -191,6 +189,10 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                        where b.Name.Contains(brandName) 
+                              != brandName.IsNullOrEmpty() 
+                              && co.Name.Contains(colourName) 
+                              != colourName.IsNullOrEmpty()
                     select new CarDetailDto
                     {
                         Id = c.Id,
@@ -202,37 +204,11 @@ namespace DataAccess.Concrete.EntityFramework
                         ModelYear = c.ModelYear,
                         Images = (from i in context.CarImages where i.CarId == c.Id select i.ImageUrl).ToList()
                     };
-                var pageResult = Math.Ceiling(result.Count() / pageResults);
-
-                if (carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() &&
-                    carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
-                {
-                    return result.Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
-                        .Take((int) pageResult).ToList();
-                }
-
-                if (!carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() && carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
-                {
-                    return result.Where(c => c.BrandName.Contains(carDetailFilterAndPaginationDto.BrandName))
-                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
-                        .Take((int) pageResult).ToList();
-                }
-
-                if (carDetailFilterAndPaginationDto.BrandName.IsNullOrEmpty() &&
-                    !carDetailFilterAndPaginationDto.ColourName.IsNullOrEmpty())
-                {
-                    return result.Where(c => c.ColourName.Contains(carDetailFilterAndPaginationDto.ColourName))
-                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
-                        .Take((int) pageResult).ToList();
-                }
-
-                else
-                {
-                    return result.Where(c => c.ColourName.Contains(carDetailFilterAndPaginationDto.ColourName)
-                                             && c.BrandName.Contains(carDetailFilterAndPaginationDto.BrandName))
-                        .Skip((carDetailFilterAndPaginationDto.Page - 1) * (int) pageResult)
-                        .Take((int) pageResult).ToList();
-                }
+                var dataCount = result.Count();
+                var pageResults = 4;
+                
+                return result.Skip((page - 1) * pageResults).Take(pageResults)
+                    .ToList();
             }
         }
     }
