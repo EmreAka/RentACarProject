@@ -33,6 +33,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<CardManager>().As<ICardService>().SingleInstance();
             builder.RegisterType<EfCardDal>().As<ICardDal>().SingleInstance();
             builder.RegisterType<PaymentManager>().As<IPaymentService>().SingleInstance();
+            builder.RegisterType<EfFavoriteDal>().As<IFavoriteDal>().SingleInstance();
+            builder.RegisterType<FavoriteManager>().As<IFavoriteService>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

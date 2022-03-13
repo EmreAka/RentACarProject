@@ -22,6 +22,7 @@ namespace DataAccess.Concrete.EntityFramework
             modelBuilder.Entity<Customer>().ToTable("Customers");
         }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Colour> Colours { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<User> Users { get; set; }
