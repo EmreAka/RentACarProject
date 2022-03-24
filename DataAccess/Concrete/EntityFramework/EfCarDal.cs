@@ -2,14 +2,8 @@
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -27,12 +21,20 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     where c.Id == carId
                     select new CarDetailDto
                     {
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,
@@ -54,6 +56,10 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     where c.BrandId == brandId
                     where c.ColourId == colourId
                     select new CarDetailDto
@@ -61,6 +67,10 @@ namespace DataAccess.Concrete.EntityFramework
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,
@@ -82,11 +92,19 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     select new CarDetailDto
                     {
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,
@@ -108,12 +126,20 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     where c.BrandId == brandId
                     select new CarDetailDto
                     {
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,
@@ -135,12 +161,20 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     where c.ColourId == colourId
                     select new CarDetailDto
                     {
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,
@@ -162,12 +196,20 @@ namespace DataAccess.Concrete.EntityFramework
                         on c.ColourId equals co.Id
                     join u in context.Customers
                         on c.UserId equals u.Id
+                    join engineType in context.Engines
+                        on c.EngineId equals engineType.Id
+                    join fuelType in context.Fuels
+                        on c.FuelId equals fuelType.Id
                     where c.UserId == customerId
                     select new CarDetailDto
                     {
                         Id = c.Id,
                         BrandName = b.Name,
                         ColourName = co.Name,
+                        EngineType = engineType.Type,
+                        FuelType = fuelType.Type,
+                        FuelConsumption = c.FuelConsumption,
+                        DoorNumber = c.DoorNumber,
                         CompanyName = u.CompanyName,
                         DailyPrice = c.DailyPrice,
                         Description = c.Description,

@@ -25,6 +25,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Colour> Colours { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Fuel> Fuels { get; set; }
+        public DbSet<Engine> Engines { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Customer> Customers { get; set; }
