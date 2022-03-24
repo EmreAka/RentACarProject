@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
@@ -15,30 +16,35 @@ namespace Business.Concrete
             _fuelDal = fuelDal;
         }
         
+        [CacheRemoveAspect("IFuelService.Get")]
         public IResult Add(Fuel fuel)
         {
             _fuelDal.Add(fuel);
             return new SuccessResult("Successfully Added");
         }
-
+        
+        [CacheRemoveAspect("IFuelService.Get")]
         public IResult Delete(Fuel fuel)
         {
             _fuelDal.Delete(fuel);
             return new SuccessResult("Successfully Deleted");
         }
 
+        [CacheRemoveAspect("IFuelService.Get")]
         public IResult Update(Fuel fuel)
         {
             _fuelDal.Update(fuel);
             return new SuccessResult("Successfully Updated");
         }
-
+        
+        [CacheAspect()]
         public IDataResult<List<Fuel>> GetAll()
         {
             var result = _fuelDal.GetAll();
             return new SuccessDataResult<List<Fuel>>(result);
         }
-
+        
+        [CacheAspect()]
         public IDataResult<Fuel> GetById(int id)
         {
             var result = _fuelDal.Get(f => f.Id == id);
