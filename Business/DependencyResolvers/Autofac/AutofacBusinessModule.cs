@@ -35,6 +35,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<PaymentManager>().As<IPaymentService>().SingleInstance();
             builder.RegisterType<EfFavoriteDal>().As<IFavoriteDal>().SingleInstance();
             builder.RegisterType<FavoriteManager>().As<IFavoriteService>().SingleInstance();
+            builder.RegisterType<EngineManager>().As<IEngineService>().SingleInstance();
+            builder.RegisterType<EfEngineDal>().As<IEngineDal>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
