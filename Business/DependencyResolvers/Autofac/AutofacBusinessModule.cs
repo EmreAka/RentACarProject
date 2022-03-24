@@ -37,6 +37,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<FavoriteManager>().As<IFavoriteService>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineService>().SingleInstance();
             builder.RegisterType<EfEngineDal>().As<IEngineDal>().SingleInstance();
+            builder.RegisterType<FuelManager>().As<IFuelService>().SingleInstance();
+            builder.RegisterType<EfFuelDal>().As<IFuelDal>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
