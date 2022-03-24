@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -15,7 +16,8 @@ namespace Business.Concrete
         {
             _engineDal = engineDal;
         }
-
+        
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IEngineService.Get")]
         public IResult Add(Engine engine)
         {
@@ -23,6 +25,7 @@ namespace Business.Concrete
             return new SuccessResult("Successfully Added");
         }
         
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IEngineService.Get")]
         public IResult Delete(Engine engine)
         {
@@ -30,6 +33,7 @@ namespace Business.Concrete
             return new SuccessResult("Successfully Deleted");
         }
         
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IEngineService.Get")]
         public IResult Update(Engine engine)
         {

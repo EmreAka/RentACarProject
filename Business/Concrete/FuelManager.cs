@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -16,6 +17,7 @@ namespace Business.Concrete
             _fuelDal = fuelDal;
         }
         
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IFuelService.Get")]
         public IResult Add(Fuel fuel)
         {
@@ -23,6 +25,7 @@ namespace Business.Concrete
             return new SuccessResult("Successfully Added");
         }
         
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IFuelService.Get")]
         public IResult Delete(Fuel fuel)
         {
@@ -30,6 +33,7 @@ namespace Business.Concrete
             return new SuccessResult("Successfully Deleted");
         }
 
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IFuelService.Get")]
         public IResult Update(Fuel fuel)
         {
