@@ -40,7 +40,8 @@ namespace WebAPI
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.WithOrigins("https://localhost:4200", "http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    builder.WithOrigins("https://localhost:4200", "http://localhost:4200", "http://localhost:8100")
+                    .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
 
