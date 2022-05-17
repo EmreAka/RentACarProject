@@ -11,6 +11,6 @@ namespace Entity.Concrete
     public class Customer: User, IEntity
     {
         //Change Customer table's Id Column into UserId.
-        public string? CompanyName { get; set; }
+        public string CompanyName { get; set; }
     }
 }

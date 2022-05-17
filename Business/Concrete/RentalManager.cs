@@ -4,7 +4,6 @@ using Business.Abstract;
 using Castle.Core.Internal;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Business;
-using Core.Utilities.FindeksAdapter;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
