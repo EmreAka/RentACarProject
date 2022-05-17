@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Utilities.CloudinaryAdapter
 {
-    public class CloudinaryAdapter
+    public static class CloudinaryAdapter
     {
         public static string UploadPhoto(IFormFile file)
         {
