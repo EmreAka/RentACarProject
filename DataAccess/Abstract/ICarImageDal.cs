@@ -10,5 +10,6 @@ namespace DataAccess.Abstract
 {
     public interface ICarImageDal : IEntityRepository<CarImage>
     {
+        void AddRange(List<CarImage> carImage);
     }
 }

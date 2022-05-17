@@ -17,10 +17,12 @@ namespace Business.Concrete
     {
 
         private readonly ICarDal _carDal;
+        private readonly ICarImageService _carImageService;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal, ICarImageService carImageService)
         {
             _carDal = carDal;
+            _carImageService = carImageService;
         }
 
         [ValidationAspect(typeof(CarValidator))]
@@ -90,15 +92,7 @@ namespace Business.Concrete
             _carDal.Add(carToAdd);
             int id = carToAdd.Id;
 
-            CarImage carImage = new CarImage()
-            {
-                CarId = id
-            };
-            
-            foreach (IFormFile image in carForAddDto.Images)
-            {
-                
-            }
+            _carImageService.AddRange(id, carForAddDto.Images);
             
             return new SuccessResult("Success");
         }

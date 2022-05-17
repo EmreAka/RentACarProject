@@ -19,9 +19,8 @@ namespace Business.Concrete
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
-
-
-        public CarImageManager(ICarImageDal carImageDal, ICarService carService)
+        
+        public CarImageManager(ICarImageDal carImageDal)
         {
             _carImageDal = carImageDal;
         }
@@ -41,6 +40,24 @@ namespace Business.Concrete
             carImage.Date = DateTime.Now;
             carImage.ImageUrl = respond;
             _carImageDal.Add(carImage);
+            return new SuccessResult();
+        }
+        
+        [CacheRemoveAspect("ICarService.Get")]
+        public IResult AddRange(int carId, List<IFormFile> file)
+        {
+            List<CarImage> carImages = new List<CarImage>();
+            foreach (IFormFile x in file)
+            {
+                var respond = CloudinaryAdapter.UploadPhoto(x);
+                carImages.Add(new CarImage()
+                {
+                    Date = DateTime.UtcNow,
+                    CarId = carId,
+                    ImageUrl = respond
+                });
+            }
+            _carImageDal.AddRange(carImages);
             return new SuccessResult();
         }
 
@@ -120,7 +137,7 @@ namespace Business.Concrete
             return new SuccessResult("Car Image deleted successfully");
         }
 
-        private IResult CheckIfImageLimitExceded(int carId)
+        public IResult CheckIfImageLimitExceded(int carId)
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId).Count;
             if (result > 5)
@@ -131,7 +148,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfCarHasAnyImage(int carId)
+        public IResult CheckIfCarHasAnyImage(int carId)
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId).Any();
             if (!result)
