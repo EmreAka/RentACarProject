@@ -9,13 +9,14 @@ using Entity.Concrete;
 using Entity.DTOs;
 using System.Collections.Generic;
 using Business.BusinessAspects.Autofac;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
 
-        ICarDal _carDal;
+        private readonly ICarDal _carDal;
 
         public CarManager(ICarDal carDal)
         {
@@ -87,8 +88,17 @@ namespace Business.Concrete
             };
             
             _carDal.Add(carToAdd);
-
             int id = carToAdd.Id;
+
+            CarImage carImage = new CarImage()
+            {
+                CarId = id
+            };
+            
+            foreach (IFormFile image in carForAddDto.Images)
+            {
+                
+            }
             
             return new SuccessResult("Success");
         }

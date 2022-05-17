@@ -19,15 +19,11 @@ namespace Business.Concrete
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
-        private ICarService _carService;
-        private IHttpContextAccessor _httpContextAccessor;
 
 
         public CarImageManager(ICarImageDal carImageDal, ICarService carService)
         {
             _carImageDal = carImageDal;
-            _carService = carService;
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         [CacheRemoveAspect("ICarImageService.Get")]
