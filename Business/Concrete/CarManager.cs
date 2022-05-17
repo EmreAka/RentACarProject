@@ -87,6 +87,8 @@ namespace Business.Concrete
             };
             
             _carDal.Add(carToAdd);
+
+            int id = carToAdd.Id;
             
             return new SuccessResult("Success");
         }
