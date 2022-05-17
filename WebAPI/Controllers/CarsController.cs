@@ -143,6 +143,19 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("addWithImages")]
+        public IActionResult AddWithImages([FromForm]CarForAddDto carForAddDto)
+        {
+            var result = _carService.AddWithImages(carForAddDto);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
         [HttpPost("delete")]
         public IActionResult Delete(Car car)
         {
