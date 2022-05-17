@@ -72,6 +72,22 @@ namespace Business.Concrete
 
         public IResult AddWithImages(CarForAddDto carForAddDto)
         {
+            Car carToAdd = new Car()
+            {
+                Description = carForAddDto.Description,
+                BrandId = carForAddDto.BrandId,
+                ColourId = carForAddDto.ColourId,
+                DailyPrice = carForAddDto.DailyPrice,
+                DoorNumber = carForAddDto.DoorNumber,
+                EngineId = carForAddDto.EngineId,
+                FuelConsumption = carForAddDto.FuelConsumption,
+                FuelId = carForAddDto.FuelId,
+                ModelYear = carForAddDto.ModelYear,
+                UserId = carForAddDto.UserId
+            };
+            
+            _carDal.Add(carToAdd);
+            
             return new SuccessResult("Success");
         }
 
