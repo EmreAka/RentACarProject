@@ -15,7 +15,7 @@ namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
     {
-        ICarImageDal _carImageDal;
+        private readonly ICarImageDal _carImageDal;
         
         public CarImageManager(ICarImageDal carImageDal)
         {
@@ -41,6 +41,7 @@ namespace Business.Concrete
         }
         
         [CacheRemoveAspect("ICarService.Get")]
+        [SecuredOperation()]
         public IResult AddRange(int carId, List<IFormFile> file)
         {
             List<CarImage> carImages = new List<CarImage>();

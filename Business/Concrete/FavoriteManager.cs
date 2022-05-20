@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -10,7 +11,7 @@ namespace Business.Concrete
 {
     public class FavoriteManager: IFavoriteService
     {
-        private IFavoriteDal _favoriteDal;
+        private readonly IFavoriteDal _favoriteDal;
 
         public FavoriteManager(IFavoriteDal favoriteDal)
         {
@@ -42,6 +43,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IFavoriteService.Get")]
+        [SecuredOperation]
         public IResult Add(Favorite favorite)
         {
             _favoriteDal.Add(favorite);
@@ -49,6 +51,7 @@ namespace Business.Concrete
         }
         
         [CacheRemoveAspect("IFavoriteService.Get")]
+        [SecuredOperation]
         public IResult Delete(Favorite favorite)
         {
             _favoriteDal.Delete(favorite);
@@ -56,6 +59,7 @@ namespace Business.Concrete
         }
         
         [CacheRemoveAspect("IFavoriteService.Get")]
+        [SecuredOperation]
         public IResult Update(Favorite favorite)
         {
             _favoriteDal.Update(favorite);

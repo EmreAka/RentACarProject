@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -10,7 +11,7 @@ namespace Business.Concrete
 {
     public class CustomerManager: ICustomerService
     {
-        private ICustomerDal _customerDal;
+        private readonly ICustomerDal _customerDal;
 
         public CustomerManager(ICustomerDal customerDal)
         {
@@ -43,6 +44,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("ICustomerService.Get")]
+        [SecuredOperation("admin")]
         public IResult Delete(Customer customer)
         {
             _customerDal.Delete(customer);
@@ -50,6 +52,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("ICustomerService.Get")]
+        [SecuredOperation]
         public IResult Update(Customer customer)
         {
             _customerDal.Update(customer);
@@ -60,7 +63,9 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetailByEmail(email));
         }
+        
         [CacheRemoveAspect("ICustomerService.Get")]
+        [SecuredOperation]
         public IResult UpdateDetails(CustomerDetailDto customerDetailDto)
         {
             var customerToUpdate = _customerDal.Get(c => c.Email == customerDetailDto.Email);

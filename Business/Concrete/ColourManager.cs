@@ -3,17 +3,14 @@ using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
     public class ColourManager : IColourService
     {
-        IColourDal _colourDal;
+        private readonly IColourDal _colourDal;
 
         public ColourManager(IColourDal colourDal)
         {
@@ -21,6 +18,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IColourService.Get")]
+        [SecuredOperation("admin")]
         public IResult Add(Colour colour)
         {
             _colourDal.Add(colour);
@@ -28,6 +26,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IColourService.Get")]
+        [SecuredOperation("admin")]
         public IResult Delete(Colour colour)
         {
             _colourDal.Delete(colour);
@@ -47,6 +46,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IColourService.Get")]
+        [SecuredOperation("admin")]
         public IResult Update(Colour colour)
         {
             _colourDal.Update(colour);

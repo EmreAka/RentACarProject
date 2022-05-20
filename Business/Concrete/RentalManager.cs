@@ -18,9 +18,9 @@ namespace Business.Concrete
 {
     public class RentalManager: IRentalService
     {
-        private IRentalDal _rentalDal;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ICarService _carService;
+        private readonly IRentalDal _rentalDal;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICarService _carService;
         public RentalManager(IRentalDal rentalDal, ICarService carService)
         {
             _rentalDal = rentalDal;
@@ -54,6 +54,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin")]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
@@ -61,12 +62,14 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin")]
         public IResult Update(Rental rental)
         {
             _rentalDal.Delete(rental);
             return new SuccessResult("Rental updated");
         }
-
+        
+        [CacheAspect()]
         public IDataResult<List<RentalDetailDto>> GetDetailByCarId(int carId)
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));

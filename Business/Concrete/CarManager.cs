@@ -33,7 +33,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
-        [SecuredOperation("admin,user")]
+        [SecuredOperation("admin")]
         public IResult Add(Car car)
         {
             _carDal.Add(car);
@@ -81,7 +81,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(CarForAddValidator))]
         [CacheRemoveAspect("ICarService.Get")]
-        [SecuredOperation("admin,user")]
+        [SecuredOperation]
         public IResult AddWithImages(CarForAddDto carForAddDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
