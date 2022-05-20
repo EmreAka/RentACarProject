@@ -7,7 +7,6 @@ public class CarForAddValidator: AbstractValidator<CarForAddDto>
 {
     public CarForAddValidator()
     {
-        RuleFor(c => c.UserId).NotEmpty();
         RuleFor(c => c.BrandId).NotEmpty();
         RuleFor(c => c.ColourId).NotEmpty();
         RuleFor(c => c.EngineId).NotEmpty();

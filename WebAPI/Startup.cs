@@ -60,25 +60,24 @@ namespace WebAPI
                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
                     ClockSkew = TimeSpan.Zero
                 };
-                //-----I'm not going to use HttpOnly cookies for now.-----
-                // options.SaveToken = true;
-                // options.Events = new JwtBearerEvents();
-                // options.Events.OnMessageReceived = context =>
-                // {
-                //     if (context.Request.Cookies.ContainsKey("X-Access-Token"))
-                //     {
-                //         context.Token = context.Request.Cookies["X-Access-Token"];
-                //     }
-                //
-                //     return Task.CompletedTask;
-                // };
+                 options.SaveToken = true;
+                 options.Events = new JwtBearerEvents();
+                 options.Events.OnMessageReceived = context =>
+                 {
+                     if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                     {
+                         context.Token = context.Request.Cookies["X-Access-Token"];
+                     }
+                
+                     return Task.CompletedTask;
+                 };
+            })
+                .AddCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.IsEssential = true;
             });
-            //     .AddCookie(options =>
-            // {
-            //     options.Cookie.SameSite = SameSiteMode.Strict;
-            //     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //     options.Cookie.IsEssential = true;
-            // });
             
             services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()

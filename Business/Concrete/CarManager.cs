@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
@@ -8,8 +9,11 @@ using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
 using System.Collections.Generic;
+using System.Linq;
 using Business.BusinessAspects.Autofac;
+using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
 {
@@ -18,11 +22,13 @@ namespace Business.Concrete
 
         private readonly ICarDal _carDal;
         private readonly ICarImageService _carImageService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CarManager(ICarDal carDal, ICarImageService carImageService)
         {
             _carDal = carDal;
             _carImageService = carImageService;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         [ValidationAspect(typeof(CarValidator))]
@@ -78,6 +84,7 @@ namespace Business.Concrete
         [SecuredOperation("admin,user")]
         public IResult AddWithImages(CarForAddDto carForAddDto)
         {
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
             Car carToAdd = new Car()
             {
                 Description = carForAddDto.Description,
@@ -89,7 +96,7 @@ namespace Business.Concrete
                 FuelConsumption = carForAddDto.FuelConsumption,
                 FuelId = carForAddDto.FuelId,
                 ModelYear = carForAddDto.ModelYear,
-                UserId = carForAddDto.UserId
+                UserId = Int32.Parse(userId)
             };
             
             _carDal.Add(carToAdd);

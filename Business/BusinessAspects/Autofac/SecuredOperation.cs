@@ -10,8 +10,8 @@ namespace Business.BusinessAspects.Autofac
 {
     public class SecuredOperation : MethodInterception
     {
-        private string[] _roles;
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly string[] _roles;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public SecuredOperation(string roles)
         {
@@ -20,8 +20,21 @@ namespace Business.BusinessAspects.Autofac
 
         }
 
+        public SecuredOperation()
+        {
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+        }
+
         protected override void OnBefore(IInvocation invocation)
         {
+            if (_roles == null)
+            {
+                if (_httpContextAccessor.HttpContext.User.Identity!.IsAuthenticated)
+                {
+                    return;
+                }
+                throw new AuthorizationDeniedException("Authorization Denied");
+            }
             var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
             foreach (var role in _roles)
             {

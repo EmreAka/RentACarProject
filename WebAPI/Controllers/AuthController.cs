@@ -32,8 +32,8 @@ namespace WebAPI.Controllers
             if (result.Success)
             {
                 //---- I am not going to use HttpOnly cookies for now -----
-                // Response.Cookies.Append("X-Access-Token", result.Data.Token, new CookieOptions() 
-                //     { HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true});
+                Response.Cookies.Append("X-Access-Token", result.Data.Token, new CookieOptions() 
+                    { HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true});
                 return Ok(result);
             }
             return BadRequest(result);
@@ -50,6 +50,8 @@ namespace WebAPI.Controllers
             var result = _authService.CreateAccessToken(registerResult.Data);
             if (result.Success)
             {
+                Response.Cookies.Append("X-Access-Token", result.Data.Token, new CookieOptions() 
+                    { HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true});
                 return Ok(result);
             }
             return BadRequest(result);

@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Castle.Core.Internal;
 using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Business;
+using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
 {
     public class RentalManager: IRentalService
     {
         private IRentalDal _rentalDal;
+        private IHttpContextAccessor _httpContextAccessor;
         private ICarService _carService;
-
         public RentalManager(IRentalDal rentalDal, ICarService carService)
         {
             _rentalDal = rentalDal;
             _carService = carService;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         [CacheAspect]
@@ -35,8 +41,14 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation()]
         public IResult Add(Rental rental)
         {
+            var result = BusinessRules.Run(CheckIfUserRentsItsOwnCar(rental.CarId));
+            if (rental != null)
+            {
+                return result;
+            }
             _rentalDal.Add(rental);
             return new SuccessResult("Rental added");
         }
@@ -91,6 +103,17 @@ namespace Business.Concrete
             }
 
             return new SuccessResult("This car is available.");
+        }
+        
+        private IResult CheckIfUserRentsItsOwnCar(int carId)
+        {
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
+            var carToEdit = _carService.GetById(carId).Data;
+            if (Int32.Parse(userId) == carToEdit.UserId)
+            {
+                return new ErrorResult("You cannot rent your own car.");
+            }
+            return new SuccessResult();
         }
         
     }

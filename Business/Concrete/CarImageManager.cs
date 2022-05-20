@@ -6,13 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Business.BusinessAspects.Autofac;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Core.Aspects.Autofac.Caching;
-using Core.Exceptions;
 using Core.Utilities.CloudinaryAdapter;
 using Core.Utilities.Business;
-using Core.Utilities.IoC;
 
 namespace Business.Concrete
 {
@@ -66,12 +63,6 @@ namespace Business.Concrete
         [SecuredUpdateImageOperation]
         public IResult Delete(CarImage carImage)
         {
-            // var result = BusinessRules.Run(CheckIfUserIsAllowedToDeleteThisImage(carImage.CarId));
-            // if (result != null)
-            // {
-            //     throw new AuthorizationDeniedException("Authorization Denied");
-            // }
-
             _carImageDal.Delete(carImage);
             return new SuccessResult("Car Image deleted successfully");
         }
@@ -137,7 +128,7 @@ namespace Business.Concrete
             return new SuccessResult("Car Image deleted successfully");
         }
 
-        public IResult CheckIfImageLimitExceded(int carId)
+        private IResult CheckIfImageLimitExceded(int carId)
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId).Count;
             if (result > 5)
@@ -148,7 +139,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IResult CheckIfCarHasAnyImage(int carId)
+        private IResult CheckIfCarHasAnyImage(int carId)
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId).Any();
             if (!result)
@@ -158,25 +149,5 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-
-        /*private IResult CheckIfUserIsAllowedToDeleteThisImage(int carId)
-        {
-            var claimsIdentities = _httpContextAccessor.HttpContext.User.Identities;
-            var result = _carService.GetById(carId);
-            if (result != null)
-            {
-                foreach (var claimIdentity in claimsIdentities)
-                {
-                    var claim = claimIdentity.Claims.ToList();
-
-                    if (result.Data.UserId == Int32.Parse(claim[0].Value))
-                    {
-                        return new SuccessResult();
-                    }
-                }
-            }
-
-            return new ErrorResult();
-        }*/
     }
 }

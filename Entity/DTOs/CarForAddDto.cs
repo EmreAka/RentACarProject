@@ -9,7 +9,6 @@ namespace Entity.DTOs
 {
     public class CarForAddDto
     {
-        public int UserId { get; set; }
         public int BrandId { get; set; }
         public int ColourId { get; set; }
         public int EngineId { get; set; }
