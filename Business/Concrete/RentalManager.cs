@@ -54,7 +54,6 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
-        [SecuredOperation("admin")]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
@@ -62,7 +61,6 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
-        [SecuredOperation("admin")]
         public IResult Update(Rental rental)
         {
             _rentalDal.Delete(rental);

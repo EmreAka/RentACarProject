@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
@@ -44,6 +45,7 @@ namespace Business.Concrete
 
         [CacheRemoveAspect("IFavoriteService.Get")]
         [SecuredOperation]
+        [PerformanceAspect(2)]
         public IResult Add(Favorite favorite)
         {
             _favoriteDal.Add(favorite);
