@@ -73,6 +73,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByCustomerId(customerId));
         }
 
+        [ValidationAspect(typeof(CarForAddValidator))]
+        [CacheRemoveAspect("ICarService.Get")]
+        [SecuredOperation("admin,user")]
         public IResult AddWithImages(CarForAddDto carForAddDto)
         {
             Car carToAdd = new Car()
