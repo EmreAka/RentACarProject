@@ -37,7 +37,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
         
-        [SecuredOperation()]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("ICardService.Get")]
         public IResult Delete(Card card)
         {
@@ -45,7 +45,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
         
-        [SecuredOperation]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("ICardService.Get")]
         public IResult Update(Card card)
         {
