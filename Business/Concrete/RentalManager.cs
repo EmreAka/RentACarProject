@@ -47,7 +47,7 @@ namespace Business.Concrete
         public IResult Add(RentalWithCardInfoDto rental)
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
-            var result = BusinessRules.Run( 
+            var result = BusinessRules.Run( CheckIfUserRentsItsOwnCar(rental.Rental.CarId),
                 CheckIfPaymentIsSuccessful(rental.Card));
             if (result != null)
             {
