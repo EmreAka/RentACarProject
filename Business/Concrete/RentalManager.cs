@@ -48,7 +48,7 @@ namespace Business.Concrete
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
             var result = BusinessRules.Run( CheckIfUserRentsItsOwnCar(rental.Rental.CarId),
-                CheckIfPaymentIsSuccessful(rental.Card));
+            CheckIfPaymentIsSuccessful(rental.Card));
             if (result != null)
             {
                 return result;
@@ -58,6 +58,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin")]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
@@ -65,6 +66,7 @@ namespace Business.Concrete
         }
 
         [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("admin")]
         public IResult Update(Rental rental)
         {
             _rentalDal.Delete(rental);
