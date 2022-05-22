@@ -1,6 +1,7 @@
 ﻿using System;
 using Business.Abstract;
 using Entity.Concrete;
+using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -64,7 +65,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(Rental rental)
+        public IActionResult Add(RentalWithCardInfoDto rental)
         {
             var result = _rentalService.Add(rental);
             if (result.Success)

@@ -32,7 +32,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
             builder.RegisterType<CardManager>().As<ICardService>().SingleInstance();
             builder.RegisterType<EfCardDal>().As<ICardDal>().SingleInstance();
-            builder.RegisterType<PaymentManager>().As<IPaymentService>().SingleInstance();
             builder.RegisterType<EfFavoriteDal>().As<IFavoriteDal>().SingleInstance();
             builder.RegisterType<FavoriteManager>().As<IFavoriteService>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineService>().SingleInstance();
