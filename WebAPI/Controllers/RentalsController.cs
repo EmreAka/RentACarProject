@@ -65,9 +65,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getDetailsByUserId")]
-        public IActionResult GetRentalDetailsByUserId(int userId)
+        public IActionResult GetRentalDetailsByUserId()
         {
-            var result = _rentalService.GetRentalDetailsByUserId(userId);
+            var result = _rentalService.GetRentalDetailsByUserId();
             if (result.Success)
             {
                 return Ok(result);

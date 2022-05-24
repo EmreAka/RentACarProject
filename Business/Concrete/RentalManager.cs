@@ -79,9 +79,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
         }
 
-        public IDataResult<List<RentalDetailDto>> GetRentalDetailsByUserId(int userId)
+        [SecuredOperation]
+        public IDataResult<List<RentalDetailDto>> GetRentalDetailsByUserId()
         {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetailsByUserId(userId));
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetailsByUserId(Int32.Parse(userId)));
         }
 
         [CacheAspect]
