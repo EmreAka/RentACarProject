@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getallbyuserid")]
-        public IActionResult GetAllByUserId(int userId)
+        public IActionResult GetAllByUserId()
         {
-            var result = _cardService.GetAllByUserId(userId);
+            var result = _cardService.GetAllByUserId();
             if (result.Success)
             {
                 return Ok(result);

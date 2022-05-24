@@ -19,9 +19,9 @@ namespace WebAPI.Controllers
         }
         
         [HttpGet("getfavoritedetailsbyuserid")]
-        public IActionResult GetFavoriteDetailsByUserId(int userId)
+        public IActionResult GetFavoriteDetailsByUserId()
         {
-            var result = _favoriteService.GetFavoriteDetailsByUserId(userId);
+            var result = _favoriteService.GetFavoriteDetailsByUserId();
             if (result.Success)
             {
                 return Ok(result);
@@ -31,9 +31,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getfavoritesbyuserid")]
-        public IActionResult GetFavoritesByUserId(int userId)
+        public IActionResult GetFavoritesByUserId()
         {
-            var result = _favoriteService.GetFavoritesByUserId(userId);
+            var result = _favoriteService.GetFavoritesByUserId();
             if (result.Success)
             {
                 return Ok(result);

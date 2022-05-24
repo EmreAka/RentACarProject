@@ -38,9 +38,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getcustomerdetailbyemail")]
-        public IActionResult GetCustomerDetailByEmail(string email)
+        public IActionResult GetCustomerDetailByEmail()
         {
-            var result = _customerService.GetCustomerDetailByEmail(email);
+            var result = _customerService.GetCustomerDetailByEmail();
             if (result.Success)
             {
                 return Ok(result);

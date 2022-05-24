@@ -74,9 +74,10 @@ namespace Business.Concrete
         }
         
         [CacheAspect()]
-        public IDataResult<List<CarDetailDto>> GetCarDetailsByCustomerId(int customerId)
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByCustomerId()
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByCustomerId(customerId));
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByCustomerId(Int32.Parse(userId)));
         }
 
         [ValidationAspect(typeof(CarForAddValidator))]

@@ -9,8 +9,8 @@ namespace Business.Abstract
     {
         IDataResult<List<Favorite>> GetAll();
         IDataResult<Favorite> GetById(int id);
-        IDataResult<List<Favorite>> GetFavoritesByUserId(int userId);
-        IDataResult<List<FavoriteDetailDto>> GetFavoriteDetailsByUserId(int userId);
+        IDataResult<List<Favorite>> GetFavoritesByUserId();
+        IDataResult<List<FavoriteDetailDto>> GetFavoriteDetailsByUserId();
         IResult Add(Favorite favorite);
         IResult Delete(Favorite favorite);
         IResult Update(Favorite favorite);

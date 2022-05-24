@@ -1,22 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
+using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
 {
     public class FavoriteManager: IFavoriteService
     {
         private readonly IFavoriteDal _favoriteDal;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public FavoriteManager(IFavoriteDal favoriteDal)
         {
             _favoriteDal = favoriteDal;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
         
         [CacheAspect()]
@@ -32,15 +39,19 @@ namespace Business.Concrete
         }
         
         [CacheAspect()]
-        public IDataResult<List<Favorite>> GetFavoritesByUserId(int userId)
+        [SecuredOperation]
+        public IDataResult<List<Favorite>> GetFavoritesByUserId()
         {
-            return new SuccessDataResult<List<Favorite>>(_favoriteDal.GetAll(f => f.UserId == userId));
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
+            return new SuccessDataResult<List<Favorite>>(_favoriteDal.GetAll(f => f.UserId == Int32.Parse(userId)));
         }
         
         [CacheAspect()]
-        public IDataResult<List<FavoriteDetailDto>> GetFavoriteDetailsByUserId(int userId)
+        [SecuredOperation]
+        public IDataResult<List<FavoriteDetailDto>> GetFavoriteDetailsByUserId()
         {
-            return new SuccessDataResult<List<FavoriteDetailDto>>(_favoriteDal.GetFavoriteDetailsByUserId(userId));
+            var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
+            return new SuccessDataResult<List<FavoriteDetailDto>>(_favoriteDal.GetFavoriteDetailsByUserId(Int32.Parse(userId)));
         }
 
         [CacheRemoveAspect("IFavoriteService.Get")]

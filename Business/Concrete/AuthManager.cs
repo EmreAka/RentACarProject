@@ -10,9 +10,9 @@ namespace Business.Concrete
 {
     public class AuthManager : IAuthService
     {
-        IUserService _userService;
-        ITokenHelper _tokenHelper;
-        private ICustomerService _customerService;
+        private readonly IUserService _userService;
+        private readonly ITokenHelper _tokenHelper;
+        private readonly ICustomerService _customerService;
 
         public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICustomerService customerService)
         {
@@ -42,23 +42,6 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<User>(userToCheck, "Successfully Logged In.");
         }
-
-        // public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
-        // {
-        //     byte[] passwordHash, passwordSalt;
-        //     HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-        //     var user = new User()
-        //     {
-        //         Email = userForRegisterDto.Email,
-        //         FirstName = userForRegisterDto.FirstName,
-        //         LastName = userForRegisterDto.LastName,
-        //         PasswordSalt = passwordSalt,
-        //         PasswordHash = passwordHash,
-        //         Status = true
-        //     };
-        //     _userService.Add(user);
-        //     return new SuccessDataResult<User>(user, "Successfully Registered.");
-        //}
         
         public IDataResult<User> Register(CustomerForRegisterDto customerForRegisterDto, string password)
         {

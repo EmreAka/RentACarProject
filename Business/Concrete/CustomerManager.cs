@@ -1,21 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Caching;
+using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Concrete
 {
     public class CustomerManager: ICustomerService
     {
         private readonly ICustomerDal _customerDal;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CustomerManager(ICustomerDal customerDal)
         {
             _customerDal = customerDal;
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
         [CacheAspect]
@@ -25,6 +31,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
+        [SecuredOperation("admin")]
         public IDataResult<List<CustomerDetailDto>> GetCustomerDetails()
         {
             return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetails());
@@ -58,10 +65,12 @@ namespace Business.Concrete
             _customerDal.Update(customer);
             return new SuccessResult("Customer updated");
         }
-
-        public IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail(string email)
+        
+        [SecuredOperation]
+        public IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail()
         {
-            return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetailByEmail(email));
+            var userEmail = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[1].Value;
+            return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetailByEmail(userEmail));
         }
         
         [CacheRemoveAspect("ICustomerService.Get")]
