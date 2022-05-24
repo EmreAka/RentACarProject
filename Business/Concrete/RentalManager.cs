@@ -78,7 +78,12 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetDetailByCarId(carId));
         }
-        
+
+        public IDataResult<List<RentalDetailDto>> GetRentalDetailsByUserId(int userId)
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetailsByUserId(userId));
+        }
+
         [CacheAspect]
         public IDataResult<List<RentalDetailDto>> GetDetails()
         {
