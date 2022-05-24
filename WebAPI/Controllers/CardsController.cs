@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         [HttpGet("getallbyuserid")]
         public IActionResult GetAllByUserId(int userId)
         {
-            var result = _cardService.GetAll();
+            var result = _cardService.GetAllByUserId(userId);
             if (result.Success)
             {
                 return Ok(result);
