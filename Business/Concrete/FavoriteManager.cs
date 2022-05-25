@@ -37,16 +37,16 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<Favorite>(_favoriteDal.Get(f => f.Id == id));
         }
-        
-        [CacheAspect()]
+
+        [CacheAspect("secure")]
         [SecuredOperation]
         public IDataResult<List<Favorite>> GetFavoritesByUserId()
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
             return new SuccessDataResult<List<Favorite>>(_favoriteDal.GetAll(f => f.UserId == Int32.Parse(userId)));
         }
-        
-        [CacheAspect()]
+
+        [CacheAspect("secure")]
         [SecuredOperation]
         public IDataResult<List<FavoriteDetailDto>> GetFavoriteDetailsByUserId()
         {

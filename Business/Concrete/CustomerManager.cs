@@ -67,6 +67,7 @@ namespace Business.Concrete
         }
         
         [SecuredOperation]
+        [CacheAspect("secure")]
         public IDataResult<List<CustomerDetailDto>> GetCustomerDetailByEmail()
         {
             var userEmail = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[1].Value;

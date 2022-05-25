@@ -29,8 +29,8 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Card>>(_cardDal.GetAll());
         }
-        
-        [CacheAspect()]
+
+        [CacheAspect("secure")]
         [SecuredOperation]
         public IDataResult<List<Card>> GetAllByUserId()
         {

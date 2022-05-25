@@ -80,6 +80,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation]
+        [CacheAspect("secure")]
         public IDataResult<List<RentalDetailDto>> GetRentalDetailsByUserId()
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;

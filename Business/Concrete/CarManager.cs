@@ -73,7 +73,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByBrandIdAndColourId(brandId, colourId));
         }
         
-        [CacheAspect()]
+        [CacheAspect("secure")]
         public IDataResult<List<CarDetailDto>> GetCarDetailsByCustomerId()
         {
             var userId = _httpContextAccessor.HttpContext.User.Identities.ToList()[0].Claims.ToList()[0].Value;
