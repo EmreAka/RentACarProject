@@ -1,6 +1,9 @@
 ﻿using Core.Entities.Concrete;
+using Core.Utilities.IoC;
 using Entity.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +15,14 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class ReCapProjectContext:DbContext
     {
+        private IConfiguration _configuration; 
+        public ReCapProjectContext()
+        {
+            _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ReCapProject;Trusted_Connection=true");
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:MSSQL"]);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

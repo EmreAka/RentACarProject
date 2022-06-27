@@ -3,6 +3,7 @@ using Autofac.Extras.DynamicProxy;
 using Business.Abstract;
 using Business.Concrete;
 using Castle.DynamicProxy;
+using Core.Utilities.CloudinaryAdapter;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
@@ -38,6 +39,7 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfEngineDal>().As<IEngineDal>().SingleInstance();
             builder.RegisterType<FuelManager>().As<IFuelService>().SingleInstance();
             builder.RegisterType<EfFuelDal>().As<IFuelDal>().SingleInstance();
+            builder.RegisterType<CloudinaryAdapter>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

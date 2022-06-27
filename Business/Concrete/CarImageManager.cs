@@ -16,11 +16,10 @@ namespace Business.Concrete
     public class CarImageManager : ICarImageService
     {
         private readonly ICarImageDal _carImageDal;
-        
-        public CarImageManager(ICarImageDal carImageDal)
-        {
-            _carImageDal = carImageDal;
-        }
+        private readonly CloudinaryAdapter _cloudinaryAdapter;
+
+        public CarImageManager(ICarImageDal carImageDal, CloudinaryAdapter cloudinaryAdapter)
+            => (_carImageDal, _cloudinaryAdapter) = (carImageDal, cloudinaryAdapter);
 
         [CacheRemoveAspect("ICarImageService.Get")]
         [CacheRemoveAspect("ICarService.Get")]
@@ -33,7 +32,7 @@ namespace Business.Concrete
                 return result;
             }
 
-            var respond = CloudinaryAdapter.UploadPhoto(file);
+            var respond = _cloudinaryAdapter.UploadPhoto(file);
             carImage.Date = DateTime.Now;
             carImage.ImageUrl = respond;
             _carImageDal.Add(carImage);
@@ -47,7 +46,7 @@ namespace Business.Concrete
             List<CarImage> carImages = new List<CarImage>();
             foreach (IFormFile x in file)
             {
-                var respond = CloudinaryAdapter.UploadPhoto(x);
+                var respond = _cloudinaryAdapter.UploadPhoto(x);
                 carImages.Add(new CarImage()
                 {
                     Date = DateTime.UtcNow,

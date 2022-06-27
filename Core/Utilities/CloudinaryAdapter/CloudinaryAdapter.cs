@@ -1,18 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Utilities.CloudinaryAdapter
 {
-    public static class CloudinaryAdapter
+    public class CloudinaryAdapter
     {
-        public static string UploadPhoto(IFormFile file)
+        IConfiguration _configuration;
+        public CloudinaryAdapter()
+        {
+            _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+        }
+        public string UploadPhoto(IFormFile file)
         {
             string picture;
             using (var ms = new MemoryStream())
@@ -21,7 +25,9 @@ namespace Core.Utilities.CloudinaryAdapter
                 var fileBytes = ms.ToArray();
                 picture = Convert.ToBase64String(fileBytes);
             }
-            Account account = new Account("emreaka", "946292829472262", "AOtqB7yeA2UVCUpT-0fuStKnIYU");
+            Account account = new Account(_configuration["Cloudinary:Cloud"],
+                _configuration["Cloudinary:ApiKey"],
+                _configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             var uploadParams = new ImageUploadParams()
             {

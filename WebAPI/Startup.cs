@@ -40,7 +40,7 @@ namespace WebAPI
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.WithOrigins("https://rentacaremreaka.web.app")
+                    builder.WithOrigins("http://localhost:4200")
                     .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
