@@ -22,7 +22,7 @@ namespace DataAccess.Concrete.EntityFramework
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:MSSQL"]);
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:AzureSQL"]);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

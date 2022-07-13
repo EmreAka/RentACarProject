@@ -11,7 +11,7 @@ namespace Core.Utilities.CloudinaryAdapter
 {
     public class CloudinaryAdapter
     {
-        IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public CloudinaryAdapter()
         {
             _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
