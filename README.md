@@ -3,6 +3,6 @@ Rent A Car Project. Asp.Net Core Web API Project.
 
 [Angular Client](https://github.com/EmreAka/RentACar-Angular)
 
-# Live project
+# Test the project
 
 https://rentacar.emreaka.tech/
