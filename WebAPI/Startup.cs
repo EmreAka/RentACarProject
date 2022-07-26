@@ -40,7 +40,7 @@ namespace WebAPI
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200")
+                    builder.WithOrigins("http://localhost:4200","https://rentacar.emreaka.tech", "https://rentacar.emreaka.tech/")
                     .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
@@ -95,22 +95,16 @@ namespace WebAPI
         {
             ServiceTool.ServiceProvider = app.ApplicationServices;
 
-            /*if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
-            }*/
-
-            app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+            }
 
             app.ConfigureCustomExceptionMiddleware();
 
             app.UseCors("AllowOrigin");
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

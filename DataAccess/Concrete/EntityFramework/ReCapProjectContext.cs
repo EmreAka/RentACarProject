@@ -13,16 +13,17 @@ using Card = Entity.Concrete.Card;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class ReCapProjectContext:DbContext
+    public class ReCapProjectContext : DbContext
     {
-        private IConfiguration _configuration; 
+        private IConfiguration _configuration;
         public ReCapProjectContext()
         {
             _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:AzureSQL"]);
+            optionsBuilder.UseNpgsql(_configuration["ConnectionStrings:PostgreSQL"]);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
