@@ -112,7 +112,7 @@ namespace Business.Concrete
                 return new ErrorResult("Your renting exceeds 1 year.");
             }
 
-            if (rentDate < DateTime.Now || returnDate < DateTime.Now)
+            if (rentDate.Date < DateTime.Now.Date || returnDate.Date.Date < DateTime.Now.Date)
             {
                 return new ErrorResult("You should rent the car for the future, not for the past...");
             }
