@@ -46,8 +46,8 @@ namespace DataAccess.Concrete.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseNpgsql(_configuration["ConnectionStrings:PostgreSQL"]);
-            optionsBuilder.UseNpgsql(GetCredentials());
+            optionsBuilder.UseNpgsql(_configuration["ConnectionStrings:PostgreSQL"]);
+            //optionsBuilder.UseNpgsql(GetCredentials());
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

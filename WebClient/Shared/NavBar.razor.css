@@ -1,0 +1,21 @@
+﻿.nav-link:hover {
+    background-color: dimgray !important;
+    border-radius: 30px !important;
+}
+
+.nav-link:focus {
+    background-color: dimgray !important;
+    border-radius: 30px !important;
+}
+
+.nav-link {
+    border-radius: 30px !important;
+}
+
+.dropdown-menu {
+    cursor: pointer;
+}
+
+.nav-item{
+    cursor: pointer;
+}
