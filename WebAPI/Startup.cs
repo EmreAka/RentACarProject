@@ -40,7 +40,7 @@ namespace WebAPI
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200","https://rentacar.emreaka.tech", "https://rentacar.emreaka.tech/", "http://localhost:53835/", "https://blazortestemre.herokuapp.com/")
+                    builder.WithOrigins("http://localhost:4200", "https://localhost:7246", "https://rentacar.emreaka.tech", "https://rentacar.emreaka.tech/", "http://localhost:53835/", "https://blazortestemre.herokuapp.com/")
                     .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
