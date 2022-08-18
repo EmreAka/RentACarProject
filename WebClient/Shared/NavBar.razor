@@ -1,19 +1,13 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Rent A Car</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" routerLink="">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" routerLink="/cars">Cars</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+﻿<MudAppBar Color="Color.Dark" Fixed="true">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+    <MudText Typo="Typo.h4" Style="margin-left: 1rem;">Rent A Car</MudText>
+    <MudSpacer />
+    @*<MudIconButton Icon="@Icons.Filled.Person" Color="Color.Inherit" />*@
+    <MudButtonGroup Color="Color.Info" Variant="Variant.Text">
+        <MudButton>Login</MudButton>
+        <MudButton>Register</MudButton>
+    </MudButtonGroup>
+</MudAppBar>
 
 @code {
 

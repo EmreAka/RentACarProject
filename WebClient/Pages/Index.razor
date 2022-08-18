@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using MudBlazor
 @using RentACarBlazorServer.Models
 @inject HttpClient httpClient
 
@@ -7,29 +6,24 @@
 
 @if (CarDetails != null)
 {
-    <div style="display: grid; grid-template-columns: 25% 25% 25% 25%;">
+    <div style="display: grid; grid-template-columns: 25% 25% 25% 25%; row-gap:1rem; margin-top: 1rem">
         @foreach (var car in CarDetails)
         {
-            <MudCard>
+            <MudCard Style="margin-right: 0.5rem; margin-left: 0.5rem">
                 <MudCardHeader>
-                    <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
-                    </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Istra Croatia</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
+                        <MudText Typo="Typo.h5">@car.BrandName</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
                     </CardHeaderActions>
                 </MudCardHeader>
-                <MudCardMedia Image="images/pilars.jpg" Height="250" />
+                <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
                 <MudCardContent>
-                    <MudText Typo="Typo.body2">This photo was taken in a small village in Istra Croatia.</MudText>
+                    <MudText Typo="Typo.body2">@car.Description</MudText>
                 </MudCardContent>
-                <MudCardActions>
+                <MudCardActions Style="justify-content: space-between">
                     <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                    <MudButton Variant="Variant.Outlined" Color="Color.Dark">Review</MudButton>
                 </MudCardActions>
             </MudCard>
         }
