@@ -4,12 +4,12 @@
 
 <PageTitle>Rent A Car</PageTitle>
 
-<div style="display: flex; flex-direction: row">
+<div class="container">
     @if (Brands != null && Colours != null)
     {
-        <div>
+        <div class="car-filter">
             <MudText Typo="Typo.h4">Brands</MudText>
-            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; max-height: 500px">
+            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; height: 30vh">
                 <MudList Clickable="true" @bind-SelectedValue="@SelectedBrandId">
                     <MudListItem Text="All Brands" />
                     @foreach (var brand in Brands)
@@ -20,7 +20,7 @@
             </MudPaper>
 
             <MudText Typo="Typo.h4" Style="margin-top: 1rem">Colours</MudText>
-            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; max-height: 500px">
+            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; height: 30vh">
                 <MudList Clickable="true" @bind-SelectedValue="SelectedColourId">
                     <MudListItem Text="All Brands" />
                     @foreach (var colour in Colours)
@@ -30,7 +30,7 @@
                 </MudList>
             </MudPaper>
 
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="width: 100%; margin-top: 1rem" @onclick="FilterCars">Filter</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="width: 100%; margin-top: 1rem; margin-bottom: 1rem" @onclick="FilterCars">Filter</MudButton>
         </div>
 
     }
@@ -39,7 +39,7 @@
 
         @if (CarDetails != null)
         {
-            <div style="display: grid; grid-template-columns: 25% 25% 25% 25%; row-gap:1rem; margin-top: 1rem; width: 100%">
+            <div class="car-list">
                 @foreach (var car in CarDetails)
                 {
                     <div>
@@ -83,10 +83,10 @@
         CarDetails = cars?.Data;
 
         var brands = await httpClient.GetFromJsonAsync<ListResponse<Brand>>("Brands/getall");
-        Brands = brands?.Data;
+        Brands = brands?.Data?.OrderBy(b => b.Name).ToList();
 
         var colours = await httpClient.GetFromJsonAsync<ListResponse<Colour>>("Colours/getall");
-        Colours = colours?.Data;
+        Colours = colours?.Data?.OrderBy(c => c.Name).ToList();
     }
 
     public async Task FilterCars()

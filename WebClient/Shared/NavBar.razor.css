@@ -19,3 +19,13 @@
 .nav-item{
     cursor: pointer;
 }
+
+.button-group-login{
+    display:flex
+}
+
+@media only screen and (max-width: 430px) {
+    .button-group-login {
+        display: none !important;
+    }
+}

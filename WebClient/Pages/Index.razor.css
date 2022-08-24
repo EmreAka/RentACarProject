@@ -1,2 +1,46 @@
 ﻿body {
 }
+
+.container {
+    display: flex;
+    flex-direction: row
+}
+
+.car-list {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    row-gap: 1rem;
+    margin-top: 1rem;
+    margin-left: 300px;
+}
+
+.car-filter{
+    position:fixed;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 1400px){
+    .car-list {
+        grid-template-columns: 50% 50%;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .car-list {
+        grid-template-columns: 100%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .container{
+        flex-direction: column;
+    }
+
+    .car-list{
+        margin-left: 0;
+    }
+
+    .car-filter{
+        display:none;
+    }
+}
