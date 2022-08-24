@@ -1,0 +1,44 @@
+﻿@page "/login"
+@using RentACarBlazorServer.Models
+@inject HttpClient httpClient;
+@using System.Net.Http.Json
+@inject NavigationManager NavigationManager;
+@inject ISnackbar Snackbar
+
+<div style="margin: auto">
+    <MudText Typo="Typo.h4">Login</MudText>
+    <EditForm Model="@loginDto" OnSubmit="@Submit">
+        <MudGrid>
+            <MudItem>
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField Style="width: 500px" Label="Email Adress"
+                                      @bind-Value="loginDto.Email" For="@(() => loginDto.Email)" />
+                        <MudTextField Label="Password" InputType="InputType.Password" Class="mt-2"
+                                      @bind-Value="loginDto.Password" For="@(() => loginDto.Password)" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</div>
+
+@code {
+    UserLoginDto loginDto = new();
+
+    private async Task<Response<TokenDto>> Submit()
+    {
+        var result = await httpClient.PostAsJsonAsync<UserLoginDto>("Auth/login", loginDto);
+        Response<TokenDto>? content = await result.Content.ReadFromJsonAsync<Response<TokenDto>>();
+
+        if (content != null)
+            if (content.Success){
+                NavigationManager.NavigateTo("");
+                Snackbar.Add("Logged in", Severity.Success);
+            }
+        return content;
+    }
+}

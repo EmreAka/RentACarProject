@@ -10,6 +10,7 @@
     display: grid;
     grid-template-columns: 33% 33% 33%;
     row-gap: 1rem;
+    justify-content: space-between;
     margin-top: 1rem;
     margin-left: 300px;
 }
@@ -19,7 +20,12 @@
     z-index: 1;
 }
 
-@media only screen and (max-width: 1400px){
+.car-card{
+    margin-right:0.5rem;
+    margin-left:0.5rem;
+}
+
+@media only screen and (max-width: 1400px) {
     .car-list {
         grid-template-columns: 50% 50%;
     }

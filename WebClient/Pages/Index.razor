@@ -42,8 +42,8 @@
             <div class="car-list">
                 @foreach (var car in CarDetails)
                 {
-                    <div>
-                        <MudCard Style="margin-right: 0.5rem; margin-left: 0.5rem">
+                    <div class="car-card">
+                        <MudCard>
                             <MudCardHeader>
                                 <CardHeaderContent>
                                     <MudText Typo="Typo.h5">@car.BrandName</MudText>
@@ -53,7 +53,7 @@
                             </MudCardHeader>
                             <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
                             <MudCardContent>
-                                <MudText Typo="Typo.body2">@car.Description</MudText>
+                                <MudText Typo="Typo.body2" Style="overflow-y: auto; max-height: 1.3rem">@car.Description</MudText>
                             </MudCardContent>
                             <MudCardActions Style="justify-content: space-between">
                                 <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />

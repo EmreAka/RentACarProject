@@ -1,11 +1,13 @@
-﻿<MudAppBar Color="Color.Dark" Fixed="true">
+﻿@inject NavigationManager NavigationManager
+
+<MudAppBar Color="Color.Dark" Fixed="true">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
-    <MudText Typo="Typo.h4" Style="margin-left: 1rem;">Rent A Car</MudText>
+    <MudText Typo="Typo.h4" Style="margin-left: 1rem;" @onclick="NavigateToHomeComponent">Rent A Car</MudText>
     <MudSpacer />
     @*<MudIconButton Icon="@Icons.Filled.Person" Color="Color.Inherit" />*@
     <div class="button-group-login">
         <MudButtonGroup Color="Color.Secondary" Variant="Variant.Text">
-            <MudButton>Login</MudButton>
+            <MudButton @onclick="NavigateToCounterComponent">Login</MudButton>
             <MudButton>Register</MudButton>
         </MudButtonGroup>
     </div>
@@ -14,4 +16,13 @@
 
 @code {
 
+    private void NavigateToCounterComponent()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+
+
+    private void NavigateToHomeComponent(){
+        NavigationManager.NavigateTo("");
+    }
 }
