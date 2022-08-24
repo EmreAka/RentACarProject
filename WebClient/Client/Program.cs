@@ -15,7 +15,7 @@ namespace WebClient
             builder.Services.AddScoped(sp =>
                 new HttpClient
                 {
-                    BaseAddress = new Uri("http://localhost:5000/api/")
+                    BaseAddress = new Uri("http://localhost:56305/api/")
                 });
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices();

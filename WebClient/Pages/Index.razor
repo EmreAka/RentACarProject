@@ -4,38 +4,112 @@
 
 <PageTitle>Rent A Car</PageTitle>
 
-@if (CarDetails != null)
-{
-    <div style="display: grid; grid-template-columns: 25% 25% 25% 25%; row-gap:1rem; margin-top: 1rem">
-        @foreach (var car in CarDetails)
+<div style="display: flex; flex-direction: row">
+    @if (Brands != null && Colours != null)
+    {
+        <div>
+            <MudText Typo="Typo.h4">Brands</MudText>
+            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; max-height: 500px">
+                <MudList Clickable="true" @bind-SelectedValue="@SelectedBrandId">
+                    <MudListItem Text="All Brands" />
+                    @foreach (var brand in Brands)
+                    {
+                        <MudListItem Text="@brand.Name" Value="@brand.Id" />
+                    }
+                </MudList>
+            </MudPaper>
+
+            <MudText Typo="Typo.h4" Style="margin-top: 1rem">Colours</MudText>
+            <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; max-height: 500px">
+                <MudList Clickable="true" @bind-SelectedValue="SelectedColourId">
+                    <MudListItem Text="All Brands" />
+                    @foreach (var colour in Colours)
+                    {
+                        <MudListItem Text="@colour.Name" Value="@colour.Id" />
+                    }
+                </MudList>
+            </MudPaper>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="width: 100%; margin-top: 1rem" @onclick="FilterCars">Filter</MudButton>
+        </div>
+
+    }
+    <div style="width: 100%">
+        <MudText Typo="Typo.h4" Style="text-align: center">Rentals</MudText>
+
+        @if (CarDetails != null)
         {
-            <MudCard Style="margin-right: 0.5rem; margin-left: 0.5rem">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h5">@car.BrandName</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                    </CardHeaderActions>
-                </MudCardHeader>
-                <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
-                <MudCardContent>
-                    <MudText Typo="Typo.body2">@car.Description</MudText>
-                </MudCardContent>
-                <MudCardActions Style="justify-content: space-between">
-                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                    <MudButton Variant="Variant.Outlined" Color="Color.Dark">Review</MudButton>
-                </MudCardActions>
-            </MudCard>
+            <div style="display: grid; grid-template-columns: 25% 25% 25% 25%; row-gap:1rem; margin-top: 1rem; width: 100%">
+                @foreach (var car in CarDetails)
+                {
+                    <div>
+                        <MudCard Style="margin-right: 0.5rem; margin-left: 0.5rem">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText Typo="Typo.h5">@car.BrandName</MudText>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                            <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
+                            <MudCardContent>
+                                <MudText Typo="Typo.body2">@car.Description</MudText>
+                            </MudCardContent>
+                            <MudCardActions Style="justify-content: space-between">
+                                <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                                <MudButton Variant="Variant.Outlined" Color="Color.Dark">Review</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </div>
+                }
+            </div>
         }
     </div>
-}
+</div>
 
 @code {
     public List<CarDetailDto>? CarDetails { get; set; }
+    public List<Brand>? Brands { get; set; }
+    public List<Colour>? Colours { get; set; }
+
+    MudListItem? selectedItem;
+
+    public object? SelectedBrandId { get; set; }
+    public object? SelectedColourId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
-        CarDetails = result?.Data;
+        var cars = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
+        CarDetails = cars?.Data;
+
+        var brands = await httpClient.GetFromJsonAsync<ListResponse<Brand>>("Brands/getall");
+        Brands = brands?.Data;
+
+        var colours = await httpClient.GetFromJsonAsync<ListResponse<Colour>>("Colours/getall");
+        Colours = colours?.Data;
+    }
+
+    public async Task FilterCars()
+    {
+        if (SelectedBrandId != null && SelectedColourId == null)
+        {
+            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbybrandid?brandId={SelectedBrandId}");
+            CarDetails = result?.Data;
+        }
+
+        else if (SelectedColourId != null && SelectedBrandId == null){
+            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbycolourid?colourId={SelectedColourId}");
+            CarDetails = result?.Data;
+        }
+
+        else if (SelectedBrandId != null && SelectedColourId != null){
+            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbybrandidandcolourid?brandId={SelectedBrandId}&colourId={SelectedColourId}");
+            CarDetails = result?.Data;
+        }
+
+        else {
+            var cars = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
+            CarDetails = cars?.Data;
+        }
     }
 }
