@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager;
 @inject ISnackbar Snackbar;
 @inject ILocalStorageService localStorage
+@inject AuthenticationStateProvider AuthStateProvider
 
 <div style="margin: auto">
     <MudText Typo="Typo.h4">Login</MudText>
@@ -40,6 +41,7 @@
                 NavigationManager.NavigateTo("");
                 Snackbar.Add("Logged in", Severity.Success);
                 await localStorage.SetItemAsync<TokenDto>("token", content.Data);
+                await AuthStateProvider.GetAuthenticationStateAsync();
             }
         return content;
     }

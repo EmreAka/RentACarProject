@@ -25,50 +25,58 @@
             </MudCarousel>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth Style="margin-top: 1rem">Rent Me</MudButton>
         </div>
-        
+
 
         <div>
             <MudList>
-                <MudListItem Style="margin-top: 0; padding-top: 0">
-                    <span style="font-weight: 400; font-size: 2rem">Description: </span>
-                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.Description</span>
-                </MudListItem>
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Rental: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.CompanyName</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Colour: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.ColourName</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Door Number: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.DoorNumber</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Engine Type: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.EngineType</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Fuel Type: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.FuelType</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Fuel Consumption: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.FuelConsumption</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Model: </span>
                     <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.ModelYear</span>
                 </MudListItem>
+                <MudDivider />
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Daily Price: </span>
                     <span style="font-weight: 300; font-size: 2rem">$@CarDetailDto.DailyPrice</span>
                 </MudListItem>
+                <MudDivider />
             </MudList>
         </div>
-
     </div>
+    <div style="display:flex; margin: 1rem 0 1rem 0">
+        <h4 style="font-weight: 400; font-size: 2rem">Description: </h4>
+        <p style="font-weight: 300; font-size: 2rem; margin-left:1rem">@CarDetailDto.Description</p>
+    </div>
+
 }
 
 
@@ -87,8 +95,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Snackbar.Add($"{Id}", Severity.Success);
-
         var car = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailbycarid?carId={Id}");
         CarDetailDto = car?.Data?.FirstOrDefault();
     }

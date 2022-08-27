@@ -1,6 +1,7 @@
 ﻿@using RentACarBlazorServer.Models
 @inject NavigationManager NavigationManager
 @inject ILocalStorageService localStorage
+@inject AuthenticationStateProvider AuthStateProvider
 
 <MudAppBar Color="Color.Dark" Fixed="true">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
@@ -8,16 +9,20 @@
     <MudSpacer />
     @*<MudIconButton Icon="@Icons.Filled.Person" Color="Color.Inherit" />*@
 
-    @if (!isLoggedIn)
-    {
-        <div class="button-group-login">
-            <MudButtonGroup Color="Color.Secondary" Variant="Variant.Text">
-                <MudButton @onclick="NavigateToCounterComponent">Login</MudButton>
-                <MudButton>Register</MudButton>
-            </MudButtonGroup>
-        </div>
-    }
-
+    <AuthorizeView>
+        <Authorized>
+            <p>@context.User.Identity.Name</p>
+            <MudButton Color="Color.Secondary" @onclick="Logout">Logout</MudButton>
+        </Authorized>
+        <NotAuthorized>
+            <div class="button-group-login">
+                <MudButtonGroup Color="Color.Secondary" Variant="Variant.Text">
+                    <MudButton @onclick="NavigateToCounterComponent">Login</MudButton>
+                    <MudButton>Register</MudButton>
+                </MudButtonGroup>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
 
 </MudAppBar>
 
@@ -31,6 +36,12 @@
         {
             isLoggedIn = true;
         }
+    }
+
+    private async Task Logout()
+    {
+        await localStorage.RemoveItemAsync("token");
+        await AuthStateProvider.GetAuthenticationStateAsync();
     }
 
     private void NavigateToCounterComponent()

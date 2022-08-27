@@ -1,9 +1,11 @@
+global using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
 using MudBlazor.Services;
 using WebClient;
+using WebClient.Services;
 
 namespace WebClient
 {
@@ -17,7 +19,7 @@ namespace WebClient
             builder.Services.AddScoped(sp =>
                 new HttpClient
                 {
-                    BaseAddress = new Uri("http://localhost:5000/api/")
+                    BaseAddress = new Uri("http://localhost:56305/api/")
                 });
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices(config =>
@@ -26,6 +28,9 @@ namespace WebClient
                 config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
             });
             builder.Services.AddBlazoredLocalStorage();
+
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+            builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();
         }
