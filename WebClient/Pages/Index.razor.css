@@ -25,6 +25,10 @@
     margin-left:0.5rem;
 }
 
+.title{
+    margin-left: 300px;
+}
+
 @media only screen and (max-width: 1400px) {
     .car-list {
         grid-template-columns: 50% 50%;
@@ -48,5 +52,9 @@
 
     .car-filter{
         display:none;
+    }
+
+    .title{
+        margin: 0;
     }
 }

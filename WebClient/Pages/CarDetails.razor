@@ -1,0 +1,95 @@
+﻿@page "/car/{id:int}"
+@using RentACarBlazorServer.Models;
+@inject HttpClient httpClient;
+@inject ISnackbar Snackbar;
+
+@if (CarDetailDto == null)
+{
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7" />
+}
+
+@if (CarDetailDto != null)
+{
+    <MudText Typo="Typo.h3" Style="text-align: center; font-weight: 300; margin-bottom: 1rem">@CarDetailDto.BrandName</MudText>
+
+    <div style="display:grid; grid-template-columns: 70% 30%">
+
+        <div>
+            <MudCarousel ShowArrows="@arrows" Style="height: 630px" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+                @foreach (var image in CarDetailDto.Images)
+                {
+                    <MudCarouselItem Transition="transition" Color="@Color.Primary">
+                        <img src="@image" style="max-height:100%;" />
+                    </MudCarouselItem>
+                }
+            </MudCarousel>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth Style="margin-top: 1rem">Rent Me</MudButton>
+        </div>
+        
+
+        <div>
+            <MudList>
+                <MudListItem Style="margin-top: 0; padding-top: 0">
+                    <span style="font-weight: 400; font-size: 2rem">Description: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.Description</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Rental: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.CompanyName</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Colour: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.ColourName</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Door Number: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.DoorNumber</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Engine Type: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.EngineType</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Fuel Type: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.FuelType</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Fuel Consumption: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.FuelConsumption</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Model: </span>
+                    <span style="font-weight: 300; font-size: 2rem">@CarDetailDto.ModelYear</span>
+                </MudListItem>
+                <MudListItem>
+                    <span style="font-weight: 400; font-size: 2rem">Daily Price: </span>
+                    <span style="font-weight: 300; font-size: 2rem">$@CarDetailDto.DailyPrice</span>
+                </MudListItem>
+            </MudList>
+        </div>
+
+    </div>
+}
+
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public CarDetailDto? CarDetailDto { get; set; }
+
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Fade;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Snackbar.Add($"{Id}", Severity.Success);
+
+        var car = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailbycarid?carId={Id}");
+        CarDetailDto = car?.Data?.FirstOrDefault();
+    }
+}

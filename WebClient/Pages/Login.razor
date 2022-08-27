@@ -1,9 +1,10 @@
 ﻿@page "/login"
-@using RentACarBlazorServer.Models
+@using RentACarBlazorServer.Models;
 @inject HttpClient httpClient;
-@using System.Net.Http.Json
+@using System.Net.Http.Json;
 @inject NavigationManager NavigationManager;
-@inject ISnackbar Snackbar
+@inject ISnackbar Snackbar;
+@inject ILocalStorageService localStorage
 
 <div style="margin: auto">
     <MudText Typo="Typo.h4">Login</MudText>
@@ -38,6 +39,7 @@
             if (content.Success){
                 NavigationManager.NavigateTo("");
                 Snackbar.Add("Logged in", Severity.Success);
+                await localStorage.SetItemAsync<TokenDto>("token", content.Data);
             }
         return content;
     }

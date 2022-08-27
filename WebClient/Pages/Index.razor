@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using RentACarBlazorServer.Models
 @inject HttpClient httpClient
+@inject NavigationManager NavigationManager
 
 <PageTitle>Rent A Car</PageTitle>
 
@@ -34,11 +35,17 @@
         </div>
 
     }
-    <div style="width: 100%">
-        <MudText Typo="Typo.h4" Style="text-align: center">Rentals</MudText>
+    <div style="width: 100%; display: flex; justify-content:center; flex-direction:column">
+        @if (CarDetails == null)
+        {
+            <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7"/>
+        }
 
         @if (CarDetails != null)
         {
+            <div class="title">
+                <MudText Typo="Typo.h4" Style="text-align:center">Rentals</MudText>
+            </div>
             <div class="car-list">
                 @foreach (var car in CarDetails)
                 {
@@ -57,7 +64,7 @@
                             </MudCardContent>
                             <MudCardActions Style="justify-content: space-between">
                                 <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                                <MudButton Variant="Variant.Outlined" Color="Color.Dark">Review</MudButton>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Dark" @onclick="() => NavigateToCarDetails(car.Id)">Review</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </div>
@@ -89,6 +96,10 @@
         Colours = colours?.Data?.OrderBy(c => c.Name).ToList();
     }
 
+    public void NavigateToCarDetails(int carId){
+        NavigationManager.NavigateTo($"car/{carId}");
+    }
+
     public async Task FilterCars()
     {
         if (SelectedBrandId != null && SelectedColourId == null)
@@ -97,17 +108,20 @@
             CarDetails = result?.Data;
         }
 
-        else if (SelectedColourId != null && SelectedBrandId == null){
+        else if (SelectedColourId != null && SelectedBrandId == null)
+        {
             var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbycolourid?colourId={SelectedColourId}");
             CarDetails = result?.Data;
         }
 
-        else if (SelectedBrandId != null && SelectedColourId != null){
+        else if (SelectedBrandId != null && SelectedColourId != null)
+        {
             var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbybrandidandcolourid?brandId={SelectedBrandId}&colourId={SelectedColourId}");
             CarDetails = result?.Data;
         }
 
-        else {
+        else
+        {
             var cars = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
             CarDetails = cars?.Data;
         }

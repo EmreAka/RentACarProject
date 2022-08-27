@@ -1,20 +1,37 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using RentACarBlazorServer.Models
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService localStorage
 
 <MudAppBar Color="Color.Dark" Fixed="true">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
-    <MudText Typo="Typo.h4" Style="margin-left: 1rem;" @onclick="NavigateToHomeComponent">Rent A Car</MudText>
+    <MudText Typo="Typo.h5" Style="margin-left: 1rem; cursor: pointer;" @onclick="NavigateToHomeComponent">Aka Rental</MudText>
     <MudSpacer />
     @*<MudIconButton Icon="@Icons.Filled.Person" Color="Color.Inherit" />*@
-    <div class="button-group-login">
-        <MudButtonGroup Color="Color.Secondary" Variant="Variant.Text">
-            <MudButton @onclick="NavigateToCounterComponent">Login</MudButton>
-            <MudButton>Register</MudButton>
-        </MudButtonGroup>
-    </div>
+
+    @if (!isLoggedIn)
+    {
+        <div class="button-group-login">
+            <MudButtonGroup Color="Color.Secondary" Variant="Variant.Text">
+                <MudButton @onclick="NavigateToCounterComponent">Login</MudButton>
+                <MudButton>Register</MudButton>
+            </MudButtonGroup>
+        </div>
+    }
+
 
 </MudAppBar>
 
 @code {
+    bool isLoggedIn = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await localStorage.GetItemAsync<TokenDto>("token");
+        if (result != null)
+        {
+            isLoggedIn = true;
+        }
+    }
 
     private void NavigateToCounterComponent()
     {
@@ -22,7 +39,8 @@
     }
 
 
-    private void NavigateToHomeComponent(){
+    private void NavigateToHomeComponent()
+    {
         NavigationManager.NavigateTo("");
     }
 }

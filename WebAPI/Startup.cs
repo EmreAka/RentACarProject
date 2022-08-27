@@ -108,7 +108,9 @@ namespace WebAPI
 
             //app.ConfigureCustomExceptionMiddleware();
 
-            app.UseMiddleware<ExceptionMiddleware>();
+            //app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseStaticFiles();
 
             app.UseCors("AllowOrigin");
 

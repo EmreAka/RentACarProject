@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace WebAPI.Controllers
 {
@@ -32,6 +34,38 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("test")]
+        public async Task<IActionResult> TestAsync(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    //var filePath = Path.GetTempFileName();
+
+                    var fileName = Path.GetFileName(formFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+
+                    //using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    await formFile.CopyToAsync(fileStream);
+                    //}
+                }
+            }
+
+            // Process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+
+            return Ok(new { count = files.Count, size });
+        }
+
         [HttpPost("update")]
         public IActionResult Update(CarImage carImage)
         {
@@ -47,7 +81,7 @@ namespace WebAPI.Controllers
         public IActionResult Delete(CarImage carImage)
         {
             var result = _carImageService.Delete(carImage);
-            if(result.Success)
+            if (result.Success)
             {
                 return Ok(result);
             }
