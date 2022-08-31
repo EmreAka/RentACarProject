@@ -5,9 +5,13 @@
 
 <PageTitle>Rent A Car</PageTitle>
 
+
 <div class="container">
+
     @if (Brands != null && Colours != null)
     {
+        <MudFab OnClick="@NavigateToAddCar" StartIcon="@Icons.Filled.Add" Label="Rent Your Car" Size="Size.Large" Style="width: 12rem; position: fixed; bottom: 10px; right: 10px; z-index: 1231;" Color="Color.Secondary" />
+
         <div class="car-filter">
             <MudText Typo="Typo.h4">Brands</MudText>
             <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; height: 30vh">
@@ -23,7 +27,7 @@
             <MudText Typo="Typo.h4" Style="margin-top: 1rem">Colours</MudText>
             <MudPaper Width="300px" style="margin-top: 1rem; overflow-y: scroll; height: 30vh">
                 <MudList Clickable="true" @bind-SelectedValue="SelectedColourId">
-                    <MudListItem Text="All Brands" />
+                    <MudListItem Text="All Colours" />
                     @foreach (var colour in Colours)
                     {
                         <MudListItem Text="@colour.Name" Value="@colour.Id" />
@@ -36,9 +40,10 @@
 
     }
     <div style="width: 100%; display: flex; justify-content:center; flex-direction:column">
+
         @if (CarDetails == null)
         {
-            <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7"/>
+            <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7" />
         }
 
         @if (CarDetails != null)
@@ -46,6 +51,11 @@
             <div class="title">
                 <MudText Typo="Typo.h4" Style="text-align:center">Rentals</MudText>
             </div>
+
+            if (!string.IsNullOrEmpty(FilterText))
+            {
+                @FilterText
+            }
             <div class="car-list">
                 @foreach (var car in CarDetails)
                 {
@@ -81,6 +91,8 @@
 
     MudListItem? selectedItem;
 
+    public string FilterText { get; set; }
+
     public object? SelectedBrandId { get; set; }
     public object? SelectedColourId { get; set; }
 
@@ -96,11 +108,16 @@
         Colours = colours?.Data?.OrderBy(c => c.Name).ToList();
     }
 
-    public void NavigateToCarDetails(int carId){
+    private void NavigateToCarDetails(int carId)
+    {
         NavigationManager.NavigateTo($"car/{carId}");
     }
 
-    public async Task FilterCars()
+    private void NavigateToAddCar(){
+        NavigationManager.NavigateTo("caradd");
+    }
+
+    private async Task FilterCars()
     {
         if (SelectedBrandId != null && SelectedColourId == null)
         {

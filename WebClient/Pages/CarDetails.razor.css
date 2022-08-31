@@ -14,3 +14,30 @@
 .body{
 
 }
+
+/*.car-detail {
+    display: grid;
+    grid-template-columns: 70% 30%
+}*/
+
+.car-detail {
+    display:flex;
+    flex-direction: row;
+}
+
+.car-detail-list {
+    width: 40rem;
+}
+
+.image{
+    height: 600px;
+}
+
+@media only screen and (max-width: 1400px){
+    .car-detail{
+        flex-direction: column;
+    }
+    .car-detail-list{
+        width: 100%;
+    }
+}

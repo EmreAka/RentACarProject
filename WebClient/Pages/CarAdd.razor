@@ -1,0 +1,146 @@
+﻿@page "/caradd"
+@using RentACarBlazorServer.Models
+@using System.Net.Http.Headers
+@using WebClient.Models
+@using FluentValidation
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+@inject ISnackbar Snackbar
+
+
+<AuthorizeView>
+    <NotAuthorized>
+        @if (true) { NavigationManager.NavigateTo("login"); }
+    </NotAuthorized>
+    <Authorized>
+        <MudText Typo="Typo.h4">Rent Your Car</MudText>
+        @if (Brands != null && Colours != null && Fuels != null)
+        {
+            <MudCard>
+                <EditForm Model="@car" Context="another" OnSubmit="@Submit">
+                    <MudCardContent>
+                        <MudTextField @bind-Value="car.Description"
+                                  For="@(()=>car.Description)"
+                                  Immediate="true" Label="Description" />
+
+                        <MudTextField @bind-Value="car.ModelYear"
+                                  For="@(()=>car.ModelYear)"
+                                  Immediate="true" Label="Model Year" InputType="InputType.Number" />
+
+                        <MudTextField @bind-Value="car.FuelConsumption"
+                                  For="@(()=>car.FuelConsumption)"
+                                  Immediate="true" Label="Fuel Consumption" InputType="InputType.Number" />
+
+                        <MudTextField @bind-Value="car.DoorNumber"
+                                  For="@(()=>car.DoorNumber)"
+                                  Immediate="true" Label="Door Number" InputType="InputType.Number" />
+
+                        <MudTextField @bind-Value="car.DailyPrice"
+                                  For="@(()=>car.DailyPrice)"
+                                  Immediate="true" Label="Daily Price" InputType="InputType.Number" />
+                        <div class="select">
+                            <MudSelect T="Brand" Label="Brand" AnchorOrigin="Origin.BottomCenter" @bind-Value="@car.Brand">
+                                @foreach (var brand in Brands)
+                                {
+                                    <MudSelectItem Value="@brand">@brand.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect T="Engine" Label="Engine Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="@car.Engine">
+                                @foreach (var engine in Engines)
+                                {
+                                    <MudSelectItem Value="engine">@engine.Type</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect T="Fuel" Label="Fuel Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="@car.Fuel">
+                                @foreach (var fuel in Fuels)
+                                {
+                                    <MudSelectItem Value="fuel">@fuel.Type</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect T="Colour" Label="Colour" AnchorOrigin="Origin.BottomCenter" @bind-Value="@car.Colour">
+                                @foreach (var colour in Colours)
+                                {
+                                    <MudSelectItem Value="@colour">@colour.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </div>
+                         <InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+
+                            <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Filled.CloudUpload"
+                                   for="fileInput112"
+                                   Style="width: 100%; margin-top: 1rem">
+                                Upload your images
+                            </MudButton>
+                        <MudCardActions>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="margin-top: 1rem">Add</MudButton>
+
+                        </MudCardActions>
+                    </MudCardContent>
+                </EditForm>
+            </MudCard>
+        }
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    CarForAddDto car = new() { Description = "Predefined attrb" };
+
+    public List<Brand>? Brands { get; set; }
+    public List<Colour>? Colours { get; set; }
+    public List<Engine>? Engines { get; set; }
+    public List<Fuel>? Fuels { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var brands = await httpClient.GetFromJsonAsync<ListResponse<Brand>>("Brands/getall");
+        Brands = brands?.Data?.OrderBy(b => b.Name).ToList();
+
+        var colours = await httpClient.GetFromJsonAsync<ListResponse<Colour>>("Colours/getall");
+        Colours = colours?.Data?.OrderBy(c => c.Name).ToList();
+
+        var engines = await httpClient.GetFromJsonAsync<ListResponse<Engine>>("Engines/getall");
+        Engines = engines?.Data?.OrderBy(e => e.Type).ToList();
+
+        var fuels = await httpClient.GetFromJsonAsync<ListResponse<Fuel>>("Fuels/getall");
+        Fuels = fuels?.Data?.OrderBy(e => e.Type).ToList();
+    }
+
+    private async Task Submit()
+    {
+        var content = new MultipartFormDataContent();
+        content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+        content.Add(new StringContent(car.Description), "Description");
+        content.Add(new StringContent(car.DailyPrice.ToString()), "DailyPrice");
+        content.Add(new StringContent(car.Brand.Id.ToString()), "BrandId");
+        content.Add(new StringContent(car.Colour.Id.ToString()), "ColourId");
+        content.Add(new StringContent(car.Engine.Id.ToString()), "EngineId");
+        content.Add(new StringContent(car.Fuel.Id.ToString()), "FuelId");
+        content.Add(new StringContent(car.ModelYear.ToString()), "ModelYear");
+        content.Add(new StringContent(car.FuelConsumption.ToString()), "FuelConsumption");
+        content.Add(new StringContent(car.DoorNumber.ToString()), "DoorNumber");
+        foreach (var item in car.Images)
+        {
+            content.Add(new StreamContent(item.OpenReadStream(maxAllowedSize: 999999), (int)item.OpenReadStream(maxAllowedSize: 999999).Length), "Images", item.Name);
+        }
+        var result = await httpClient.PostAsync("Cars/addwithimages", content);
+    }
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        var entries = e.GetMultipleFiles();
+        //Do your validations here
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add($"Files with {entries.FirstOrDefault().Size} bytes size are not allowed", MudBlazor.Severity.Error);
+        Snackbar.Add($"Files starting with letter {entries.FirstOrDefault().Name.Substring(0, 1)} are not recommended", MudBlazor.Severity.Warning);
+        Snackbar.Add($"This file has the extension {entries.FirstOrDefault().Name.Split(".").Last()}", MudBlazor.Severity.Info);
+
+        //TODO upload the files to the server
+        car.Images = entries.ToList();
+        //foreach(var item in car.Images)
+        //    Console.WriteLine(item);
+    }
+}

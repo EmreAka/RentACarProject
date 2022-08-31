@@ -11,8 +11,12 @@
 
     <AuthorizeView>
         <Authorized>
-            <p>@context.User.Identity.Name</p>
-            <MudButton Color="Color.Secondary" @onclick="Logout">Logout</MudButton>
+            @*<MudButton Color="Color.Success" @onclick="Logout">@context.User.Identity.Name</MudButton>*@
+            <MudMenu Color="Color.Secondary" Label="@context.User.Identity.Name" Variant="Variant.Filled" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Dark">
+                <MudMenuItem>Profile</MudMenuItem>
+                <MudMenuItem>Rentals</MudMenuItem>
+                <MudMenuItem OnClick="@Logout">Logout</MudMenuItem>
+            </MudMenu>
         </Authorized>
         <NotAuthorized>
             <div class="button-group-login">

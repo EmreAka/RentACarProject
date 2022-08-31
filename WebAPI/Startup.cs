@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Business.Abstract;
+using Business.Concrete;
 
 namespace WebAPI
 {
@@ -40,7 +42,7 @@ namespace WebAPI
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "https://localhost:7246", "https://rentacar.emreaka.tech", "https://rentacar.emreaka.tech/", "http://localhost:53835/", "https://blazortestemre.herokuapp.com/")
+                    builder.WithOrigins("http://localhost:4200", "https://localhost:7246", "https://rentacar.emreaka.tech", "https://rentacar.emreaka.tech/", "http://localhost:53835/", "https://blazortestemre.herokuapp.com/", "https://blazorwasmtest-b27ea.web.app/", "https://blazorwasmtest-b27ea.web.app")
                     .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
@@ -108,7 +110,8 @@ namespace WebAPI
 
             //app.ConfigureCustomExceptionMiddleware();
 
-            //app.UseMiddleware<ExceptionMiddleware>();
+            if (env.IsProduction())
+                app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseStaticFiles();
 

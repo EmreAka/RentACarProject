@@ -12,14 +12,14 @@
 {
     <MudText Typo="Typo.h3" Style="text-align: center; font-weight: 300; margin-bottom: 1rem">@CarDetailDto.BrandName</MudText>
 
-    <div style="display:grid; grid-template-columns: 70% 30%">
+    <div class="car-detail">
 
-        <div>
-            <MudCarousel ShowArrows="@arrows" Style="height: 630px" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+        <div style="width: 100%">
+            <MudCarousel ShowArrows="@arrows" Style="height: 600px" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
                 @foreach (var image in CarDetailDto.Images)
                 {
                     <MudCarouselItem Transition="transition" Color="@Color.Primary">
-                        <img src="@image" style="max-height:100%;" />
+                        <MudImage Fluid="true" Src="@image" Alt="Swedish Farm House" Class="rounded-lg" />
                     </MudCarouselItem>
                 }
             </MudCarousel>
@@ -27,7 +27,7 @@
         </div>
 
 
-        <div>
+        <div class="car-detail-list">
             <MudList>
                 <MudListItem>
                     <span style="font-weight: 400; font-size: 2rem">Rental: </span>
