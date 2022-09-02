@@ -14,13 +14,14 @@
             <MudItem>
                 <MudCard>
                     <MudCardContent>
-                        <MudTextField Style="width: 500px" Label="Email Adress"
-                                      @bind-Value="loginDto.Email" For="@(() => loginDto.Email)" />
+                        <MudTextField Style="width: 500px" Label="Email Adress" @bind-Value="loginDto.Email"
+                            For="@(() => loginDto.Email)" />
                         <MudTextField Label="Password" InputType="InputType.Password" Class="mt-2"
-                                      @bind-Value="loginDto.Password" For="@(() => loginDto.Password)" />
+                            @bind-Value="loginDto.Password" For="@(() => loginDto.Password)" />
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                            Class="ml-auto">Login</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -31,13 +32,14 @@
 @code {
     UserLoginDto loginDto = new();
 
-    private async Task<Response<TokenDto>> Submit()
+    private async Task<SingleResponse<TokenDto>> Submit()
     {
         var result = await httpClient.PostAsJsonAsync<UserLoginDto>("Auth/login", loginDto);
-        Response<TokenDto>? content = await result.Content.ReadFromJsonAsync<Response<TokenDto>>();
+        SingleResponse<TokenDto>? content = await result.Content.ReadFromJsonAsync<SingleResponse<TokenDto>>();
 
         if (content != null)
-            if (content.Success){
+            if (content.Success)
+            {
                 NavigationManager.NavigateTo("");
                 Snackbar.Add("Logged in", Severity.Success);
                 await localStorage.SetItemAsync<TokenDto>("token", content.Data);

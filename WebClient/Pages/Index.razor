@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using RentACarBlazorServer.Models
+@using WebClient.Services
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
 
@@ -10,7 +11,8 @@
 
     @if (Brands != null && Colours != null)
     {
-        <MudFab OnClick="@NavigateToAddCar" StartIcon="@Icons.Filled.Add" Label="Rent Your Car" Size="Size.Large" Style="width: 12rem; position: fixed; bottom: 10px; right: 10px; z-index: 1231;" Color="Color.Secondary" />
+        <MudFab OnClick="@NavigateToAddCar" StartIcon="@Icons.Filled.Add" Label="Rent Your Car" Size="Size.Large"
+        Style="width: 12rem; position: fixed; bottom: 10px; right: 10px; z-index: 1231;" Color="Color.Secondary" />
 
         <div class="car-filter">
             <MudText Typo="Typo.h4">Brands</MudText>
@@ -35,7 +37,8 @@
                 </MudList>
             </MudPaper>
 
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="width: 100%; margin-top: 1rem; margin-bottom: 1rem" @onclick="FilterCars">Filter</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+            Style="width: 100%; margin-top: 1rem; margin-bottom: 1rem" @onclick="FilterCars">Filter</MudButton>
         </div>
 
     }
@@ -70,11 +73,13 @@
                             </MudCardHeader>
                             <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
                             <MudCardContent>
-                                <MudText Typo="Typo.body2" Style="overflow-y: auto; max-height: 1.3rem">@car.Description</MudText>
+                                <MudText Typo="Typo.body2" Style="overflow-y: auto; max-height: 1.3rem">@car.Description
+                                </MudText>
                             </MudCardContent>
                             <MudCardActions Style="justify-content: space-between">
                                 <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                                <MudButton Variant="Variant.Outlined" Color="Color.Dark" @onclick="() => NavigateToCarDetails(car.Id)">Review</MudButton>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Dark"
+                            @onclick="() => NavigateToCarDetails(car.Id)">Review</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </div>
@@ -96,6 +101,9 @@
     public object? SelectedBrandId { get; set; }
     public object? SelectedColourId { get; set; }
 
+    [Inject]
+    private CarService _carService { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         var cars = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
@@ -113,7 +121,8 @@
         NavigationManager.NavigateTo($"car/{carId}");
     }
 
-    private void NavigateToAddCar(){
+    private void NavigateToAddCar()
+    {
         NavigationManager.NavigateTo("caradd");
     }
 
@@ -121,25 +130,25 @@
     {
         if (SelectedBrandId != null && SelectedColourId == null)
         {
-            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbybrandid?brandId={SelectedBrandId}");
+            var result = await _carService.GetCarDetailsByBrandId((int)SelectedBrandId);
             CarDetails = result?.Data;
         }
 
         else if (SelectedColourId != null && SelectedBrandId == null)
         {
-            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbycolourid?colourId={SelectedColourId}");
+            var result = await _carService.GetCarDetailsByColourId((int)SelectedColourId);
             CarDetails = result?.Data;
         }
 
         else if (SelectedBrandId != null && SelectedColourId != null)
         {
-            var result = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailsbybrandidandcolourid?brandId={SelectedBrandId}&colourId={SelectedColourId}");
+            var result = await _carService.GetCarDetailsByBrandIdAndColourId((int)SelectedBrandId, (int)SelectedColourId);
             CarDetails = result?.Data;
         }
 
         else
         {
-            var cars = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>("Cars/getcardetails");
+            var cars = await _carService.GetCarDetails();
             CarDetails = cars?.Data;
         }
     }

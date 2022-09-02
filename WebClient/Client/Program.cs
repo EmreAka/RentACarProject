@@ -19,7 +19,7 @@ namespace WebClient
             builder.Services.AddScoped(sp =>
                 new HttpClient
                 {
-                    BaseAddress = new Uri("http://localhost:56305/api/")
+                    BaseAddress = new Uri("https://rentacarbackend.herokuapp.com/api/")
                 });
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices(config =>
@@ -30,6 +30,12 @@ namespace WebClient
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+            builder.Services.AddScoped<CarService>();
+            builder.Services.AddScoped<BrandService>();
+            builder.Services.AddScoped<ColourService>();
+            builder.Services.AddScoped<EngineService>();
+            builder.Services.AddScoped<FuelService>();
+
             builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();

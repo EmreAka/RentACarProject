@@ -1,6 +1,7 @@
 ﻿@page "/caradd"
 @using RentACarBlazorServer.Models
 @using System.Net.Http.Headers
+@using WebClient.Services
 @using WebClient.Models
 @using FluentValidation
 @inject NavigationManager NavigationManager
@@ -88,7 +89,18 @@
 
 @code {
     CarForAddDto car = new() { Description = "Predefined attrb" };
-
+    [Inject]
+    public CarService _carService { get; set; }
+    [Inject]
+    public BrandService _brandService { get; set; }
+    [Inject]
+    public NavigationManager _navigationManager {get; set;}
+    [Inject]
+    public ColourService _colourService { get; set; }
+    [Inject]
+    public EngineService _engineService { get; set; }
+    [Inject]
+    public FuelService _fuelService { get; set; }
     public List<Brand>? Brands { get; set; }
     public List<Colour>? Colours { get; set; }
     public List<Engine>? Engines { get; set; }
@@ -96,16 +108,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var brands = await httpClient.GetFromJsonAsync<ListResponse<Brand>>("Brands/getall");
+        var brands = await _brandService.GetAll();
         Brands = brands?.Data?.OrderBy(b => b.Name).ToList();
 
-        var colours = await httpClient.GetFromJsonAsync<ListResponse<Colour>>("Colours/getall");
+        var colours = await _colourService.GetAll();
         Colours = colours?.Data?.OrderBy(c => c.Name).ToList();
 
-        var engines = await httpClient.GetFromJsonAsync<ListResponse<Engine>>("Engines/getall");
+        var engines = await _engineService.GetAll();
         Engines = engines?.Data?.OrderBy(e => e.Type).ToList();
 
-        var fuels = await httpClient.GetFromJsonAsync<ListResponse<Fuel>>("Fuels/getall");
+        var fuels = await _fuelService.GetAll();
         Fuels = fuels?.Data?.OrderBy(e => e.Type).ToList();
     }
 
@@ -126,7 +138,14 @@
         {
             content.Add(new StreamContent(item.OpenReadStream(maxAllowedSize: 999999), (int)item.OpenReadStream(maxAllowedSize: 999999).Length), "Images", item.Name);
         }
-        var result = await httpClient.PostAsync("Cars/addwithimages", content);
+        
+        var result = await _carService.AddCarWithImages(content);
+        if (result.Success)
+        {
+            _navigationManager.NavigateTo("");
+            Snackbar.Add("Successfully Added", MudBlazor.Severity.Success);
+        }
+        
     }
 
     private void UploadFiles(InputFileChangeEventArgs e)

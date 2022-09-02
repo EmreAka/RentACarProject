@@ -1,5 +1,6 @@
 ﻿@page "/car/{id:int}"
 @using RentACarBlazorServer.Models;
+@using WebClient.Services
 @inject HttpClient httpClient;
 @inject ISnackbar Snackbar;
 
@@ -10,12 +11,14 @@
 
 @if (CarDetailDto != null)
 {
-    <MudText Typo="Typo.h3" Style="text-align: center; font-weight: 300; margin-bottom: 1rem">@CarDetailDto.BrandName</MudText>
+    <MudText Typo="Typo.h3" Style="text-align: center; font-weight: 300; margin-bottom: 1rem">@CarDetailDto.BrandName
+    </MudText>
 
     <div class="car-detail">
 
         <div style="width: 100%">
-            <MudCarousel ShowArrows="@arrows" Style="height: 600px" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+            <MudCarousel ShowArrows="@arrows" Style="height: 600px" ShowBullets="@bullets" AutoCycle="@autocycle"
+            TData="object">
                 @foreach (var image in CarDetailDto.Images)
                 {
                     <MudCarouselItem Transition="transition" Color="@Color.Primary">
@@ -86,6 +89,9 @@
     [Parameter]
     public int Id { get; set; }
 
+    [Inject]
+    public CarService _carService { get; set; }
+
     public CarDetailDto? CarDetailDto { get; set; }
 
     private bool arrows = true;
@@ -95,7 +101,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var car = await httpClient.GetFromJsonAsync<ListResponse<CarDetailDto>>($"Cars/getcardetailbycarid?carId={Id}");
+        var car = await _carService.GetCarDetailByCarId(Id);
         CarDetailDto = car?.Data?.FirstOrDefault();
     }
 }
