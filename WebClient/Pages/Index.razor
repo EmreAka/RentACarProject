@@ -78,9 +78,7 @@
                                 </MudText>
                             </MudCardContent>
                             <MudCardActions Style="justify-content: space-between">
-                                <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                               @* <MudButton Variant="Variant.Outlined" Color="Color.Dark"
-                            @onclick="() => NavigateToCarDetails(CarDetails[i].Id)">Review</MudButton>*@
+                                <MudIconButton @onclick="() => AddToFavorites(CarDetails[i])" Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
                                 <button class="learn-more" @onclick="() => NavigateToCarDetails(CarDetails[i].Id)">
                                     <span class="circle" aria-hidden="true">
                                         <span class="icon arrow"></span>
@@ -132,6 +130,10 @@
     private void NavigateToAddCar()
     {
         NavigationManager.NavigateTo("caradd");
+    }
+
+    private void AddToFavorites(CarDetailDto carDetailDto){
+        Console.WriteLine(carDetailDto.Id);
     }
 
     private async Task FilterCars()
