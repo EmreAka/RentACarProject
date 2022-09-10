@@ -1,17 +1,24 @@
 using RentACarBlazorServer.Models;
 using System.Net.Http.Json;
+using MudBlazor;
 
 namespace WebClient.Services;
 
 public class CarService
 {
     private readonly System.Net.Http.HttpClient _httpClient;
-    public CarService(HttpClient httpClient)
-        => (_httpClient) = (httpClient);
+    private readonly ISnackbar _snackbar;
+    public CarService(HttpClient httpClient, ISnackbar snackbar)
+        => (_httpClient, _snackbar) = (httpClient, snackbar);
 
     public async Task<Response> AddCarWithImages(MultipartFormDataContent content)
     {
         var result = await _httpClient.PostAsync("Cars/addwithimages", content);
+        if (!result.IsSuccessStatusCode)
+        {
+            _snackbar.Add("A problem occured", Severity.Error);
+
+        }
         var response = await result.Content.ReadFromJsonAsync<Response>();
         return response;
     }

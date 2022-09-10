@@ -19,7 +19,8 @@ namespace WebClient
             builder.Services.AddScoped(sp =>
                 new HttpClient
                 {
-                    BaseAddress = new Uri("https://rentacarbackend.herokuapp.com/api/")
+                    //BaseAddress = new Uri("https://rentacarbackend.herokuapp.com/api/")
+                    BaseAddress = new Uri("http://localhost:56305/api/")
                 });
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices(config =>

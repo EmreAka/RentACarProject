@@ -60,26 +60,33 @@
                 @FilterText
             }
             <div class="car-list">
-                @foreach (var car in CarDetails)
+                @for (var j = 0; j < CarDetails.Count(); j++)
                 {
+                    var i = j;
                     <div class="car-card">
                         <MudCard>
                             <MudCardHeader>
                                 <CardHeaderContent>
-                                    <MudText Typo="Typo.h5">@car.BrandName</MudText>
+                                    <MudText Typo="Typo.h5">@CarDetails[i].BrandName</MudText>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
                                 </CardHeaderActions>
                             </MudCardHeader>
-                            <MudCardMedia Image="@car.Images[0]" Style="width: 100%" Height="250" />
+                            <MudCardMedia Image="@CarDetails[i].Images[0]" Style="width: 100%" Height="250" />
                             <MudCardContent>
-                                <MudText Typo="Typo.body2" Style="overflow-y: auto; max-height: 1.3rem">@car.Description
+                                <MudText Typo="Typo.body2" Style="overflow-y: auto; max-height: 1.3rem">@CarDetails[i].Description
                                 </MudText>
                             </MudCardContent>
                             <MudCardActions Style="justify-content: space-between">
                                 <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                                <MudButton Variant="Variant.Outlined" Color="Color.Dark"
-                            @onclick="() => NavigateToCarDetails(car.Id)">Review</MudButton>
+                               @* <MudButton Variant="Variant.Outlined" Color="Color.Dark"
+                            @onclick="() => NavigateToCarDetails(CarDetails[i].Id)">Review</MudButton>*@
+                                <button class="learn-more" @onclick="() => NavigateToCarDetails(CarDetails[i].Id)">
+                                    <span class="circle" aria-hidden="true">
+                                        <span class="icon arrow"></span>
+                                    </span>
+                                    <span class="button-text">Learn More</span>
+                                </button>
                             </MudCardActions>
                         </MudCard>
                     </div>
@@ -93,6 +100,7 @@
     public List<CarDetailDto>? CarDetails { get; set; }
     public List<Brand>? Brands { get; set; }
     public List<Colour>? Colours { get; set; }
+    public int IndexValue { get; set; } = 0;
 
     MudListItem? selectedItem;
 

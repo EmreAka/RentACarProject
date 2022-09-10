@@ -38,7 +38,7 @@ namespace WebAPI
         {
 
             services.AddControllers();
-            services.AddCors(options => 
+            services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin", builder =>
                 {
@@ -62,17 +62,17 @@ namespace WebAPI
                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
                     ClockSkew = TimeSpan.Zero
                 };
-                 options.SaveToken = true;
-                 options.Events = new JwtBearerEvents();
-                 options.Events.OnMessageReceived = context =>
-                 {
-                     if (context.Request.Cookies.ContainsKey("X-Access-Token"))
-                     {
-                         context.Token = context.Request.Cookies["X-Access-Token"];
-                     }
-                
-                     return Task.CompletedTask;
-                 };
+                //options.SaveToken = true;
+                //options.Events = new JwtBearerEvents();
+                //options.Events.OnMessageReceived = context =>
+                //{
+                //    if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                //    {
+                //        context.Token = context.Request.Cookies["X-Access-Token"];
+                //    }
+
+                //    return Task.CompletedTask;
+                //};
             })
                 .AddCookie(options =>
             {
@@ -80,15 +80,39 @@ namespace WebAPI
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.IsEssential = true;
             });
-            
+
             services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()
             });
-            services.AddSwaggerGen(c =>
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+            //    //To be able to use two classes with the same name.
+            //    c.CustomSchemaIds(i => i.FullName);
+            //});
+            services.AddSwaggerGen(x =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
                 //To be able to use two classes with the same name.
-                c.CustomSchemaIds(i => i.FullName);
+                x.CustomSchemaIds(i => i.FullName);
+                x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                {
+                                    Id = "Bearer",
+                                    Type = ReferenceType.SecurityScheme,
+                                }
+                        }, new List<string>()}
+                });
             });
         }
 
