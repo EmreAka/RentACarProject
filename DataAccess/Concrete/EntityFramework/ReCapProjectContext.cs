@@ -4,12 +4,6 @@ using Entity.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Card = Entity.Concrete.Card;
 
 namespace DataAccess.Concrete.EntityFramework
@@ -20,35 +14,13 @@ namespace DataAccess.Concrete.EntityFramework
         public ReCapProjectContext()
         {
             _configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        }
-
-        private string GetCredentials()
-        {
-            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            var databaseUri = new Uri(databaseUrl);
-            var userInfo = databaseUri.UserInfo.Split(':');
-
-            var builder = new NpgsqlConnectionStringBuilder
-            {
-                Host = databaseUri.Host,
-                Port = databaseUri.Port,
-                Username = userInfo[0],
-                Password = userInfo[1],
-                Database = databaseUri.LocalPath.TrimStart('/'),
-                Pooling = true,
-                SslMode = SslMode.Require,
-                TrustServerCertificate = true
-            };
-
-            return builder.ToString();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_configuration["ConnectionStrings:PostgreSQL"]);
-            //optionsBuilder.UseNpgsql(GetCredentials());
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:MSSQL"]);
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("Users");
